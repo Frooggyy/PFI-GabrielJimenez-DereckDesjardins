@@ -16,6 +16,7 @@ let itemLayout;
 let waiting = null;
 let showKeywords = false;
 let keywordsOnchangeTimger = null;
+let user=null;
 
 Init_UI();
 async function Init_UI() {
@@ -34,6 +35,7 @@ async function Init_UI() {
         showPosts();
     });
 
+    this.user = sessionStorage.getItem("activeUser");
     installKeywordsOnkeyupEvent();
     await showPosts();
     start_Periodic_Refresh();
@@ -215,17 +217,30 @@ async function renderPosts(queryString) {
 }
 function renderPost(post, loggedUser) {
     let date = convertToFrenchDate(UTC_To_Local(post.Date));
-    let crudIcon =
-        `
-        <span class="editCmd cmdIconSmall fa fa-pencil" postId="${post.Id}" title="Modifier nouvelle"></span>
-        <span class="deleteCmd cmdIconSmall fa fa-trash" postId="${post.Id}" title="Effacer nouvelle"></span>
-        `;
+    
+    let likedUsers = ""
+    if(post.Likes != []){
+        post.Likes.forEach(user=>{
+            likedUsers+= user.name + "\n"
+        })
+    }
+    let headerIcons=""
+    if(sessionStorage.getItem("activeUser")){
+        
+        headerIcons =
+            `
+            <span class="editCmd cmdIconSmall fa fa-pencil" postId="${post.Id}" title="Modifier nouvelle"></span>
+            <span class="deleteCmd cmdIconSmall fa fa-trash" postId="${post.Id}" title="Effacer nouvelle"></span>
+            <span class="likeCmd cmdIconSmall fa fa-thumbs-up" postId="${post.Id}" title="${likedUsers}"> ${post.Likes.length}</span>
+            `;
+    }
+    
 
     return $(`
         <div class="post" id="${post.Id}">
             <div class="postHeader">
                 ${post.Category}
-                ${crudIcon}
+                ${headerIcons}
             </div>
             <div class="postTitle"> ${post.Title} </div>
             <img class="postImage" src='${post.Image}'/>
@@ -312,6 +327,11 @@ function attach_Posts_UI_Events_Callback() {
     $(".deleteCmd").on("click", function () {
         showDeletePostForm($(this).attr("postId"));
     });
+    $(".likeCmd").off();
+    $(".likeCmd").on("click", function(){
+        addLike(user);
+    });
+    
 
     $(".moreText").click(function () {
         $(`.commentsPanel[postId=${$(this).attr("postId")}]`).show();
@@ -334,11 +354,15 @@ function addWaitingGif() {
         postsPanel.itemsPanel.append($("<div id='waitingGif' class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
     }, waitingGifTrigger)
 }
+
 function removeWaitingGif() {
     clearTimeout(waiting);
     $("#waitingGif").remove();
 }
 
+function addLike(user){
+    console.log(user);
+}
 /////////////////////// Posts content manipulation ///////////////////////////////////////////////////////
 
 function linefeeds_to_Html_br(selector) {
