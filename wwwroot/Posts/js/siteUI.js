@@ -152,6 +152,11 @@ function showDeletePostForm(id) {
     $("#viewTitle").text("Retrait");
     renderDeletePostForm(id);
 }
+function showCreateUserForm() {
+    showForm();
+    $("#viewTitle").text("Creation de compte");
+    renderUserForm();
+}
 function showAbout() {
     hidePosts();
     $("#hiddenIcon").show();
@@ -160,6 +165,7 @@ function showAbout() {
     $("#viewTitle").text("À propos...");
     $("#aboutContainer").show();
 }
+
 
 //////////////////////////// Posts rendering /////////////////////////////////////////////////////////////
 
@@ -270,12 +276,18 @@ function updateDropDownMenu() {
     })
     DDMenu.append($(`<div class="dropdown-divider"></div> `));
     DDMenu.append($(`
+        <div class="dropdown-item menuItemLayout" id="connectCmd">
+            <i class="menuIcon fa fa-user mx-2"></i> Creer un compte
+        </div>
         <div class="dropdown-item menuItemLayout" id="aboutCmd">
             <i class="menuIcon fa fa-info-circle mx-2"></i> À propos...
         </div>
         `));
     $('#aboutCmd').on("click", function () {
         showAbout();
+    });
+    $('#connectCmd').on("click", function () {
+        showCreateUserForm()
     });
     $('#allCatCmd').on("click", async function () {
         selectedCategory = "";
@@ -528,10 +540,10 @@ function newUser() {
     User.Name = "";
     User.Email = "";
     User.Password = "";
-    User.Avatar = "news-logo-upload.png";
-    User.Created = "";
+    User.Avatar = "no-avatar.png";
+    User.Created = Date.now();
     User.VerifyCode = "";
-    User.Authorizations = "";
+    User.Authorizations = {readAccess: 1, writeAccess: 1};
     return User;
 }
 function renderUserForm(user = null) {
@@ -542,7 +554,8 @@ function renderUserForm(user = null) {
     $("#form").append(`
         <form class="form" id="userForm">
             <input type="hidden" name="VerifyCode" value="${user.VerifyCode}"/>
-             <input type="hidden" name="Authorizations" value="${user.Authorizations}"/>
+            <input type="hidden" name="Authorizations" value="${user.Authorizations}"/>
+            <input type="hidden" name="Created" value="${user.Created}"/>
             <label for="Name" class="form-label">Nom </label>
             <input 
                 class="form-control"
@@ -554,38 +567,39 @@ function renderUserForm(user = null) {
             />
             <label for="Email" class="form-label">Email </label>
             <input 
-                class="form-control"
+                class="form-control Email"
                 name="Email" 
                 id="Email" 
                 placeholder="Email"
                 required
                 RequireMessage="Veuillez entrer un courriel"
-                InvalidMessage="Le courriel comporte un caractère illégal"
-                value="${user.Courriel}"
+                InvalidMessage="Le courriel n'a pas un format valide"
+                value="${user.Email}"
             />
             <label for="Password" class="form-label">Mot de Passe</label>
-             <textarea 
+             <input 
+                type="password"
                 class="form-control" 
                 name="Password" 
                 id="Password"
                 placeholder="Mot de passe" 
                 required 
-                RequireMessage = 'Veuillez entrer un mot de passe'>${user.Password}</textarea>
+                RequireMessage = 'Veuillez entrer un mot de passe'>${user.Password}</input>
             
             <label class="form-label">Image</label>
-            <div class='imageUploaderContainer'>
-                <div class='imageUploader' 
+            <div class='imageUploaderContainer' style="max-height:400px; max-width:400px; margin:auto;">
+                <div class='imageUploader'  
                      newImage='${create}' 
                      controlId='Image' 
                      imageSrc='${user.Avatar}' 
-                     waitingImage="Loading_icon.gif">
+                     waitingImage="Loading_icon.gif" >
                 </div>
             </div>
             <div id="keepDateControl">
                 <input type="checkbox" name="keepDate" id="keepDate" class="checkbox" checked>
                 <label for="keepDate"> Conserver la date de création </label>
             </div>
-            <input type="submit" value="Enregistrer" id="savePost" class="btn btn-primary displayNone">
+            <input type="submit" value="Enregistrer" id="saveUser" class="btn btn-primary displayNone">
         </form>
     `);
     if (create) $("#keepDateControl").hide();
@@ -595,23 +609,23 @@ function renderUserForm(user = null) {
 
     $("#commit").click(function () {
         $("#commit").off();
-        return $('#savePost').trigger("click");
+        return $('#saveUser').trigger("click");
     });
-    $('#postForm').on("submit", async function (event) {
+    $('#userForm').on("submit", async function (event) {
         event.preventDefault();
-        let post = getFormData($("#postForm"));
+        let post = getFormData($("#userForm"));
         if (post.Category != selectedCategory)
             selectedCategory = "";
         if (create || !('keepDate' in post))
             post.Date = Local_to_UTC(Date.now());
         delete post.keepDate;
-        post = await Posts_API.Save(post, create);
-        if (!Posts_API.error) {
+        post = await Users_API.Save(post, create);
+        if (!Users_API.error) {
             await showPosts();
             postsPanel.scrollToElem(post.Id);
         }
         else
-            showError("Une erreur est survenue! ", Posts_API.currentHttpError);
+            showError("Une erreur est survenue! ", Users_API.currentHttpError);
     });
     $('#cancel').on("click", async function () {
         await showPosts();
