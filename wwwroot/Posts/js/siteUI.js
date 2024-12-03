@@ -522,6 +522,101 @@ function renderPostForm(post = null) {
         await showPosts();
     });
 }
+
+function newUser() {
+    let User = {};
+    User.Name = "";
+    User.Email = "";
+    User.Password = "";
+    User.Avatar = "news-logo-upload.png";
+    User.Created = "";
+    User.VerifyCode = "";
+    User.Authorizations = "";
+    return User;
+}
+function renderUserForm(user = null) {
+    let create = user == null;
+    if (create) user = newUser();
+    $("#form").show();
+    $("#form").empty();
+    $("#form").append(`
+        <form class="form" id="userForm">
+            <input type="hidden" name="VerifyCode" value="${user.VerifyCode}"/>
+             <input type="hidden" name="Authorizations" value="${user.Authorizations}"/>
+            <label for="Name" class="form-label">Nom </label>
+            <input 
+                class="form-control"
+                name="Name"
+                id="Nom"
+                placeholder="Nom"
+                required
+                value="${user.Name}"
+            />
+            <label for="Email" class="form-label">Email </label>
+            <input 
+                class="form-control"
+                name="Email" 
+                id="Email" 
+                placeholder="Email"
+                required
+                RequireMessage="Veuillez entrer un courriel"
+                InvalidMessage="Le courriel comporte un caractère illégal"
+                value="${user.Courriel}"
+            />
+            <label for="Password" class="form-label">Mot de Passe</label>
+             <textarea 
+                class="form-control" 
+                name="Password" 
+                id="Password"
+                placeholder="Mot de passe" 
+                required 
+                RequireMessage = 'Veuillez entrer un mot de passe'>${user.Password}</textarea>
+            
+            <label class="form-label">Image</label>
+            <div class='imageUploaderContainer'>
+                <div class='imageUploader' 
+                     newImage='${create}' 
+                     controlId='Image' 
+                     imageSrc='${user.Avatar}' 
+                     waitingImage="Loading_icon.gif">
+                </div>
+            </div>
+            <div id="keepDateControl">
+                <input type="checkbox" name="keepDate" id="keepDate" class="checkbox" checked>
+                <label for="keepDate"> Conserver la date de création </label>
+            </div>
+            <input type="submit" value="Enregistrer" id="savePost" class="btn btn-primary displayNone">
+        </form>
+    `);
+    if (create) $("#keepDateControl").hide();
+
+    initImageUploaders();
+    initFormValidation(); // important do to after all html injection!
+
+    $("#commit").click(function () {
+        $("#commit").off();
+        return $('#savePost').trigger("click");
+    });
+    $('#postForm').on("submit", async function (event) {
+        event.preventDefault();
+        let post = getFormData($("#postForm"));
+        if (post.Category != selectedCategory)
+            selectedCategory = "";
+        if (create || !('keepDate' in post))
+            post.Date = Local_to_UTC(Date.now());
+        delete post.keepDate;
+        post = await Posts_API.Save(post, create);
+        if (!Posts_API.error) {
+            await showPosts();
+            postsPanel.scrollToElem(post.Id);
+        }
+        else
+            showError("Une erreur est survenue! ", Posts_API.currentHttpError);
+    });
+    $('#cancel').on("click", async function () {
+        await showPosts();
+    });
+}
 function getFormData($form) {
     // prevent html injections
     const removeTag = new RegExp("(<[a-zA-Z0-9]+>)|(</[a-zA-Z0-9]+>)", "g");
