@@ -51,11 +51,22 @@ class Users_API {
         });
     }
     static async Login(data){
-        Users_API.initHttpState();
-        print(data);
+        console.log(data);
         return new Promise(resolve=>{
             $.ajax({
-                url : this.API_URL()+`/token?loginInfo=${data}`,
+                url : this.API_URL()+`token`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: (data)=>{resolve(data);},
+                error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
+            });
+        });
+    }
+    static async Logout(){
+        return new Promise(resolve=>{
+            $.ajax({
+                url : this.API_URL()+`token`,
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(data),
@@ -68,7 +79,7 @@ class Users_API {
         Users_API.initHttpState();
         return new Promise(resolve => {
             $.ajax({
-                url: create ? this.API_URL()+`accounts/register?user=${data}`: this.API_URL() + `accounts/modify?user=${data}`,
+                url: create ? this.API_URL()+`accounts/register`: this.API_URL() + `accounts/modify`,
                 type: create ? "POST" : "PUT",
                 contentType: 'application/json',
                 data: JSON.stringify(data),

@@ -295,20 +295,34 @@ function updateDropDownMenu() {
         `));
     })
     DDMenu.append($(`<div class="dropdown-divider"></div> `));
+    if(sessionStorage.getItem("activeUser")){
+        DDMenu.append($(`
+            <div class="dropdown-item menuItemLayout" id="connectCmd">
+                <i class="menuIcon fa fa-user mx-2"></i> Se Connecter
+            </div>`));
+    }else{
+        DDMenu.append($(`
+            <div class="dropdown-item menuItemLayout" id="logoutCmd">
+            <i class="menuIcon fa fa-user mx-2"></i> Se déconnecter
+        </div>`));
+    }
     DDMenu.append($(`
-        <div class="dropdown-item menuItemLayout" id="connectCmd">
-            <i class="menuIcon fa fa-user mx-2"></i> Se Connecter
-        </div>
         <div class="dropdown-item menuItemLayout" id="aboutCmd">
             <i class="menuIcon fa fa-info-circle mx-2"></i> À propos...
         </div>
         `));
+    $('#connectCmd').show();
+    $('#logoutCmd').show();
+
     $('#aboutCmd').on("click", function () {
         showAbout();
     });
     $('#connectCmd').on("click", function () {
         showLoginForm();
     });
+    $('#logoutCmd'){
+        Users_API.Logout();
+    }
     $('#allCatCmd').on("click", async function () {
         selectedCategory = "";
         await showPosts(true);
@@ -319,6 +333,12 @@ function updateDropDownMenu() {
         await showPosts(true);
         updateDropDownMenu();
     });
+    if(sessionStorage.getItem("activeUser")){
+        
+        $('#logoutCmd').show();
+    }else{
+        $('#connectCmd').show();
+    }
 }
 function attach_Posts_UI_Events_Callback() {
 
@@ -601,23 +621,25 @@ function renderLoginForm(){
             <span id="passwordError"></span>
             <br>
             <input type="submit" value="Enregistrer" id="login" class="btn btn-primary ">
-            
-        </form>
-        <hr>
+            <hr>
         <div id="createUser" class="btn btn-primary">Créer un compte</div>
+        </form>
+        
     `);
 
-    initFormValidation();
+    //initFormValidation();
 
     $("#commit").click(function () {
         $("#commit").off();
         return $('#login').trigger("click");
     });
-    $('#userForm').on("submit", async function (event) {
+    $('#loginForm').on("submit", async function (event) {
         event.preventDefault();
+        
         let token = null;
         let loginInfo = getFormData($("#loginForm"));
-        token = Users_API.Login(loginInfo);
+        Users_API.Login(loginInfo);
+        
         if(loginInfo.Email && loginInfo.Password){
             
         }else if(!loginInfo.Email){
@@ -626,7 +648,7 @@ function renderLoginForm(){
             $("#passwordError").append("Mot de passe incorrecte");
         }
         if(token){
-            console.log("login success");
+
         }
         if (!Users_API.error) {
             // await showPosts();
