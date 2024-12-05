@@ -73,6 +73,11 @@ body {
     padding-bottom: 0px; 
 }
 
+.form{
+    flex:1;
+    width:50%;
+    justify-self: center;
+}
 #form {
     padding: var(--panelPadding);
     height: 100%;

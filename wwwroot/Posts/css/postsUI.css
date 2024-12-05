@@ -147,6 +147,10 @@
     display:none;
 }
 
+.btn-primary{
+    width: 100%;
+}
+
 .lessText {
     display:none;
 }

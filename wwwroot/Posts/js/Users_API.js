@@ -1,6 +1,6 @@
 
 class Users_API {
-    static API_URL() { return "http://localhost:5000/api/accounts" };
+    static API_URL() { return "http://localhost:5000/" };
     static initHttpState() {
         this.currentHttpError = "";
         this.currentStatus = 0;
@@ -50,12 +50,25 @@ class Users_API {
             });
         });
     }
+    static async Login(data){
+        Users_API.initHttpState();
+        print(data);
+        return new Promise(resolve=>{
+            $.ajax({
+                url : this.API_URL()+`/token?loginInfo=${data}`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: (data)=>{resolve(data);},
+                error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
+            });
+        });
+    }
     static async Save(data, create = true) {
         Users_API.initHttpState();
-        console.log(data);
         return new Promise(resolve => {
             $.ajax({
-                url: create ? this.API_URL() : this.API_URL() + "/" + data.Id,
+                url: create ? this.API_URL()+`accounts/register?user=${data}`: this.API_URL() + `accounts/modify?user=${data}`,
                 type: create ? "POST" : "PUT",
                 contentType: 'application/json',
                 data: JSON.stringify(data),

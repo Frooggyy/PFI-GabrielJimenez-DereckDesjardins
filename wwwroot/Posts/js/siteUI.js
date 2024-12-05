@@ -154,6 +154,11 @@ function showDeletePostForm(id) {
     $("#viewTitle").text("Retrait");
     renderDeletePostForm(id);
 }
+function showLoginForm(){
+    showForm()
+    $("#viewTitle").text("Connexion");
+    renderLoginForm();
+}
 function showCreateUserForm() {
     showForm();
     $("#viewTitle").text("Creation de compte");
@@ -292,7 +297,7 @@ function updateDropDownMenu() {
     DDMenu.append($(`<div class="dropdown-divider"></div> `));
     DDMenu.append($(`
         <div class="dropdown-item menuItemLayout" id="connectCmd">
-            <i class="menuIcon fa fa-user mx-2"></i> Creer un compte
+            <i class="menuIcon fa fa-user mx-2"></i> Se Connecter
         </div>
         <div class="dropdown-item menuItemLayout" id="aboutCmd">
             <i class="menuIcon fa fa-info-circle mx-2"></i> À propos...
@@ -302,7 +307,7 @@ function updateDropDownMenu() {
         showAbout();
     });
     $('#connectCmd').on("click", function () {
-        showCreateUserForm()
+        showLoginForm();
     });
     $('#allCatCmd').on("click", async function () {
         selectedCategory = "";
@@ -565,10 +570,74 @@ function newUser() {
     User.Email = "";
     User.Password = "";
     User.Avatar = "no-avatar.png";
-    User.Created = Date.now();
-    User.VerifyCode = "";
-    User.Authorizations = {readAccess: 1, writeAccess: 1};
     return User;
+}
+function renderLoginForm(){
+    $("#form").show();
+    $("#form").empty();
+    $("#form").append(`
+        <form class="form" id="loginForm">
+            <label for="Email" class="form-label"></label>
+            <input 
+                class="form-control Email"
+                name="Email" 
+                id="Email" 
+                placeholder="Courriel"
+                required
+                RequireMessage="Veuillez entrer un courriel"
+                InvalidMessage="Le courriel n'a pas un format valide"
+            />
+            <span id="emailError"></span>
+            <br>
+             <input 
+                type="password"
+                class="form-control" 
+                name="Password" 
+                id="Password"
+                placeholder="Mot de passe" 
+                required 
+                RequireMessage = 'Veuillez entrer un mot de passe'
+            >
+            <span id="passwordError"></span>
+            <br>
+            <input type="submit" value="Enregistrer" id="login" class="btn btn-primary ">
+            
+        </form>
+        <hr>
+        <div id="createUser" class="btn btn-primary">Créer un compte</div>
+    `);
+
+    initFormValidation();
+
+    $("#commit").click(function () {
+        $("#commit").off();
+        return $('#login').trigger("click");
+    });
+    $('#userForm').on("submit", async function (event) {
+        event.preventDefault();
+        let token = null;
+        let loginInfo = getFormData($("#loginForm"));
+        token = Users_API.Login(loginInfo);
+        if(loginInfo.Email && loginInfo.Password){
+            
+        }else if(!loginInfo.Email){
+            $("#emailError").append("Courriel invalide");
+        }else if(!loginInfo.Password){
+            $("#passwordError").append("Mot de passe incorrecte");
+        }
+        if(token){
+            console.log("login success");
+        }
+        if (!Users_API.error) {
+            // await showPosts();
+            // postsPanel.scrollToElem(post.Id);
+        }
+        else
+            showError("Une erreur est survenue! ", Users_API.currentHttpError);
+    });
+    $('#cancel').on("click", async function () {
+        //await showPosts();
+    });
 }
 function renderUserForm(user = null) {
     let create = user == null;
@@ -576,10 +645,7 @@ function renderUserForm(user = null) {
     $("#form").show();
     $("#form").empty();
     $("#form").append(`
-        <form class="form" id="userForm">
-            <input type="hidden" name="VerifyCode" value="${user.VerifyCode}"/>
-            <input type="hidden" name="Authorizations" value="${user.Authorizations}"/>
-            <input type="hidden" name="Created" value="${user.Created}"/>
+        <form class="form" id="userForm">>
             <label for="Name" class="form-label">Nom </label>
             <input 
                 class="form-control"
@@ -610,11 +676,11 @@ function renderUserForm(user = null) {
                 required 
                 RequireMessage = 'Veuillez entrer un mot de passe'>${user.Password}</input>
             
-            <label class="form-label">Image</label>
+            <label class="form-label">Avatar</label>
             <div class='imageUploaderContainer' style="max-height:400px; max-width:400px; margin:auto;">
                 <div class='imageUploader'  
                      newImage='${create}' 
-                     controlId='Image' 
+                     controlId='Avatar' 
                      imageSrc='${user.Avatar}' 
                      waitingImage="Loading_icon.gif" >
                 </div>
