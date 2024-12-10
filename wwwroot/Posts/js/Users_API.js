@@ -76,13 +76,14 @@ class Users_API {
             });
         });
     }
-    static async Logout(){
+    static async Logout(userId){
+        sessionStorage.removeItem("activeUser");
+        sessionStorage.removeItem("activeToken");
+        
         return new Promise(resolve=>{
             $.ajax({
-                url : this.API_URL()+`token`,
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(data),
+                url : this.API_URL()+`accounts/logout?userId=${userId}`,
+                type: "GET",
                 success: (data)=>{resolve(data);},
                 error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
             });

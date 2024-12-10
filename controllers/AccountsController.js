@@ -45,6 +45,7 @@ export default class AccountsController extends Controller {
         } else
             this.HttpContext.response.badRequest("Credential Email and password are missing.");
     }
+    
     logout() {
         let userId = this.HttpContext.path.params.userId;
         if (userId) {

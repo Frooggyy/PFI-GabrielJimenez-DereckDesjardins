@@ -16,7 +16,7 @@ let itemLayout;
 let waiting = null;
 let showKeywords = false;
 let keywordsOnchangeTimger = null;
-let user=null;
+let user = null;
 
 Init_UI();
 async function Init_UI() {
@@ -111,8 +111,7 @@ async function showPosts(reset = false) {
     periodic_Refresh_paused = false;
     await postsPanel.show(reset);
 }
-function showVerificationForm(){
-    hidePosts();
+function showVerificationForm() {
     $('#form').show();
     $("#viewTitle").text("Verification par Courriel");
     renderVerificationForm(sessionStorage.getItem("activeUser"));
@@ -160,8 +159,9 @@ function showDeletePostForm(id) {
     $("#viewTitle").text("Retrait");
     renderDeletePostForm(id);
 }
-function showLoginForm(){
-    showForm()
+function showLoginForm() {
+    showForm();
+    $('#commit').hide();
     $("#viewTitle").text("Connexion");
     renderLoginForm();
 }
@@ -228,16 +228,16 @@ async function renderPosts(queryString) {
 }
 function renderPost(post, loggedUser) {
     let date = convertToFrenchDate(UTC_To_Local(post.Date));
-    
+
     let likedUsers = ""
-    if(post.Likes != []){
-        post.Likes.forEach(user=>{
-            likedUsers+= user.name + "\n"
+    if (post.Likes != []) {
+        post.Likes.forEach(user => {
+            likedUsers += user.name + "\n"
         })
     }
-    let headerIcons=""
-    if(sessionStorage.getItem("activeUser")){
-        
+    let headerIcons = ""
+    if (sessionStorage.getItem("activeUser")) {
+
         headerIcons =
             `
             <span class="editCmd cmdIconSmall fa fa-pencil" postId="${post.Id}" title="Modifier nouvelle"></span>
@@ -245,7 +245,7 @@ function renderPost(post, loggedUser) {
             <span class="likeCmd cmdIconSmall fa fa-thumbs-up" postId="${post.Id}" title="${likedUsers}"> ${post.Likes.length}</span>
             `;
     }
-    
+
 
     return $(`
         <div class="post" id="${post.Id}">
@@ -301,12 +301,12 @@ function updateDropDownMenu() {
         `));
     })
     DDMenu.append($(`<div class="dropdown-divider"></div> `));
-    if(!sessionStorage.getItem("activeUser")){
+    if (!sessionStorage.getItem("activeUser")) {
         DDMenu.append($(`
             <div class="dropdown-item menuItemLayout" id="connectCmd">
                 <i class="menuIcon fa fa-user mx-2"></i> Se Connecter
             </div>`));
-    }else{
+    } else {
         DDMenu.append($(`
             <div class="dropdown-item menuItemLayout" id="logoutCmd">
             <i class="menuIcon fa fa-user mx-2"></i> Se déconnecter
@@ -326,8 +326,9 @@ function updateDropDownMenu() {
     $('#connectCmd').on("click", function () {
         showLoginForm();
     });
-    $('#logoutCmd').on("click", function(){
-        Users_API.Logout();
+    $('#logoutCmd').on("click", function () {
+        Users_API.Logout(JSON.parse(sessionStorage.getItem("activeUser")).Id);
+        showPosts();
     });
     $('#allCatCmd').on("click", async function () {
         selectedCategory = "";
@@ -339,10 +340,10 @@ function updateDropDownMenu() {
         await showPosts(true);
         updateDropDownMenu();
     });
-    if(sessionStorage.getItem("activeUser")){
-        
+    if (sessionStorage.getItem("activeUser")) {
+
         $('#logoutCmd').show();
-    }else{
+    } else {
         $('#connectCmd').show();
     }
 }
@@ -359,10 +360,10 @@ function attach_Posts_UI_Events_Callback() {
         showDeletePostForm($(this).attr("postId"));
     });
     $(".likeCmd").off();
-    $(".likeCmd").on("click", function(){
+    $(".likeCmd").on("click", function () {
         addLike(user);
     });
-    
+
 
     $(".moreText").click(function () {
         $(`.commentsPanel[postId=${$(this).attr("postId")}]`).show();
@@ -391,7 +392,7 @@ function removeWaitingGif() {
     $("#waitingGif").remove();
 }
 
-function addLike(user){
+function addLike(user) {
     console.log(user);
 }
 /////////////////////// Posts content manipulation ///////////////////////////////////////////////////////
@@ -589,7 +590,7 @@ function renderPostForm(post = null) {
         await showPosts();
     });
 }
-function renderVerificationForm(user){
+function renderVerificationForm(user) {
     let jsonUser = JSON.parse(user);
 
     $("#form").show();
@@ -611,11 +612,10 @@ function renderVerificationForm(user){
             <input type="submit" value="Enregistrer" id="verify" class="btn btn-primary ">
             <hr>
         </form>`);
-        $('#verificationForm').on("submit", async function (event) {
-            event.preventDefault();
-            let code = getFormData($("#verificationForm"));
-            Users_API.Verify({Id:jsonUser.Id, code: code.Verification});
-        });
+    $('#verificationForm').on("submit", async function (event) {
+        let code = getFormData($("#verificationForm"));
+        Users_API.Verify({ Id: jsonUser.Id, code: code.Verification });
+    });
 }
 function newUser() {
     let User = {};
@@ -625,7 +625,7 @@ function newUser() {
     User.Avatar = "no-avatar.png";
     return User;
 }
-function renderLoginForm(){
+function renderLoginForm() {
     $("#form").show();
     $("#form").empty();
     $("#form").append(`
@@ -668,28 +668,34 @@ function renderLoginForm(){
     });
     $('#loginForm').on("submit", async function (event) {
         event.preventDefault();
-        
+
         let token = null;
         let user = null;
         let loginInfo = getFormData($("#loginForm"));
-        
-        
-        if(loginInfo.Email && loginInfo.Password){
-            Users_API.Login(loginInfo).then((thenToken)=>{
+
+
+        if (loginInfo.Email && loginInfo.Password) {
+            Users_API.Login(loginInfo).then((thenToken) => {
                 token = thenToken;
                 console.log(token);
-                if(token){
+                if (token) {
                     user = token.User;
                     sessionStorage.setItem("activeUser", JSON.stringify(user));
-                    showVerificationForm();
-               }
+                    sessionStorage.setItem("activeToken", JSON.stringify(token));
+                    if (user.VerifyCode != "verified") {
+                        showVerificationForm();
+                    } else {
+                        showPosts();
+                    }
+
+                }
             });
-        }else if(!loginInfo.Email){
+        } else if (!loginInfo.Email) {
             $("#emailError").append("Courriel invalide");
-        }else if(!loginInfo.Password){
+        } else if (!loginInfo.Password) {
             $("#passwordError").append("Mot de passe incorrecte");
         }
-        
+
         // // if (!Users_API.error) {
         // //     console.log(user);
         // //     if(user.VerifyCode != "verified"){
@@ -701,7 +707,7 @@ function renderLoginForm(){
         // else
         //     showError("Une erreur est survenue! ", Users_API.currentHttpError);
     });
-    $("#createUser").on("click", async function (){
+    $("#createUser").on("click", async function () {
         await renderUserForm();
     });
     $('#cancel').on("click", async function () {
@@ -758,7 +764,8 @@ function renderUserForm(user = null) {
                 <input type="checkbox" name="keepDate" id="keepDate" class="checkbox" checked>
                 <label for="keepDate"> Conserver la date de création </label>
             </div>
-            <input type="submit" value="Enregistrer" id="saveUser" class="btn btn-primary displayNone">
+            <input type="submit" value="Enregistrer" id="saveUser" class="btn btn-primary display">
+            <div id="cancel" class="btn btn-secondary display"> Annuler </div>
         </form>
     `);
     if (create) $("#keepDateControl").hide();
@@ -771,20 +778,21 @@ function renderUserForm(user = null) {
         return $('#saveUser').trigger("click");
     });
     $('#userForm').on("submit", async function (event) {
+        
+        let user = getFormData($("#userForm"));
+        Users_API.Save(user, create).then(async (thenUser) => {
+            user = thenUser;
+            if (user) {
+                if (!create) {
+                    await showPosts();
+                } else {
+                    await showVerificationForm(user);
+                }
+            }
+            else
+                showError("Une erreur est survenue! ", Users_API.currentHttpError);
+        });
         event.preventDefault();
-        let post = getFormData($("#userForm"));
-        if (post.Category != selectedCategory)
-            selectedCategory = "";
-        if (create || !('keepDate' in post))
-            post.Date = Local_to_UTC(Date.now());
-        delete post.keepDate;
-        post = await Users_API.Save(post, create);
-        if (!Users_API.error) {
-            await showPosts();
-            postsPanel.scrollToElem(post.Id);
-        }
-        else
-            showError("Une erreur est survenue! ", Users_API.currentHttpError);
     });
     $('#cancel').on("click", async function () {
         await showPosts();
