@@ -111,6 +111,12 @@ async function showPosts(reset = false) {
     periodic_Refresh_paused = false;
     await postsPanel.show(reset);
 }
+function showVerificationForm(){
+    hidePosts();
+    $('#form').show();
+    $("#viewTitle").text("Verification par Courriel");
+    renderVerificationForm(sessionStorage.getItem("activeUser"));
+}
 function hidePosts() {
     postsPanel.hide();
     hideSearchIcon();
@@ -295,7 +301,7 @@ function updateDropDownMenu() {
         `));
     })
     DDMenu.append($(`<div class="dropdown-divider"></div> `));
-    if(sessionStorage.getItem("activeUser")){
+    if(!sessionStorage.getItem("activeUser")){
         DDMenu.append($(`
             <div class="dropdown-item menuItemLayout" id="connectCmd">
                 <i class="menuIcon fa fa-user mx-2"></i> Se Connecter
@@ -320,9 +326,9 @@ function updateDropDownMenu() {
     $('#connectCmd').on("click", function () {
         showLoginForm();
     });
-    $('#logoutCmd'){
+    $('#logoutCmd').on("click", function(){
         Users_API.Logout();
-    }
+    });
     $('#allCatCmd').on("click", async function () {
         selectedCategory = "";
         await showPosts(true);
@@ -583,7 +589,34 @@ function renderPostForm(post = null) {
         await showPosts();
     });
 }
+function renderVerificationForm(user){
+    let jsonUser = JSON.parse(user);
 
+    $("#form").show();
+    $("#form").empty();
+    $("#form").append(`
+        <form class="form" id="verificationForm">
+            <label for="Email" class="form-label"></label>
+            <input 
+                class="form-control"
+                name="Verification" 
+                id="Verification" 
+                placeholder="Code de verification"
+                required
+                RequireMessage="Veuillez entrer le code de verificaiton"
+                InvalidMessage="Code invalide"
+            />
+            <span id="verificationError"></span>
+            <br>
+            <input type="submit" value="Enregistrer" id="verify" class="btn btn-primary ">
+            <hr>
+        </form>`);
+        $('#verificationForm').on("submit", async function (event) {
+            event.preventDefault();
+            let code = getFormData($("#verificationForm"));
+            Users_API.Verify({Id:jsonUser.Id, code: code.Verification});
+        });
+}
 function newUser() {
     let User = {};
     User.Name = "";
@@ -637,25 +670,39 @@ function renderLoginForm(){
         event.preventDefault();
         
         let token = null;
+        let user = null;
         let loginInfo = getFormData($("#loginForm"));
-        Users_API.Login(loginInfo);
+        
         
         if(loginInfo.Email && loginInfo.Password){
-            
+            Users_API.Login(loginInfo).then((thenToken)=>{
+                token = thenToken;
+                console.log(token);
+                if(token){
+                    user = token.User;
+                    sessionStorage.setItem("activeUser", JSON.stringify(user));
+                    showVerificationForm();
+               }
+            });
         }else if(!loginInfo.Email){
             $("#emailError").append("Courriel invalide");
         }else if(!loginInfo.Password){
             $("#passwordError").append("Mot de passe incorrecte");
         }
-        if(token){
-
-        }
-        if (!Users_API.error) {
-            // await showPosts();
-            // postsPanel.scrollToElem(post.Id);
-        }
-        else
-            showError("Une erreur est survenue! ", Users_API.currentHttpError);
+        
+        // // if (!Users_API.error) {
+        // //     console.log(user);
+        // //     if(user.VerifyCode != "verified"){
+        // //         showVerificationForm();
+        // //     }else{
+        // //         showPosts();
+        // //     }
+        // // }
+        // else
+        //     showError("Une erreur est survenue! ", Users_API.currentHttpError);
+    });
+    $("#createUser").on("click", async function (){
+        await renderUserForm();
     });
     $('#cancel').on("click", async function () {
         //await showPosts();

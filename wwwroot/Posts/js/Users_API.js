@@ -26,12 +26,15 @@ class Users_API {
             });
         });
     }
-    static async Get(id = null) {
+    static async Get(data) {
         Users_API.initHttpState();
+        console.log(data);
         return new Promise(resolve => {
             $.ajax({
-                url: this.API_URL() + (id != null ? "/" + id : ""),
-                complete: data => { resolve({ ETag: data.getResponseHeader('ETag'), data: data.responseJSON }); },
+                url: this.API_URL()+`api/accounts?email=${data.Email}`,
+                type: "GET",
+                contentType: 'application/json',
+                success: (data) => { resolve(data); },
                 error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
             });
         });
@@ -51,13 +54,23 @@ class Users_API {
         });
     }
     static async Login(data){
-        console.log(data);
         return new Promise(resolve=>{
             $.ajax({
                 url : this.API_URL()+`token`,
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(data),
+                success: (data)=>{resolve(data);},
+                error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
+            });
+        });
+    }
+    static async Verify(data){
+        return new Promise(resolve=>{
+            $.ajax({
+                url : this.API_URL()+`accounts/verify?id=${data.Id}&code=${data.code}`,
+                type: "GET",
+                contentType: "application/json",
                 success: (data)=>{resolve(data);},
                 error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
             });

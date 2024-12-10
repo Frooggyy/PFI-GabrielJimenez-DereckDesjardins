@@ -34,7 +34,7 @@ export default class AccountsController extends Controller {
                         user = this.repository.get(user.Id);
                         let newToken = TokenManager.create(user);
                         this.HttpContext.response.created(newToken);
-                        sessionStorage.setItem("activeUser", user);
+
                     } else {
                         this.HttpContext.response.wrongPassword("Wrong password.");
                     }
@@ -203,7 +203,7 @@ export default class AccountsController extends Controller {
         } else
             this.HttpContext.response.unAuthorized();
     }
-
+    
     // GET:account/remove/id
     remove(id) { // warning! this is not an API endpoint 
         // todo make sure that the requester has legitimity to delete ethier itself or its an admin
