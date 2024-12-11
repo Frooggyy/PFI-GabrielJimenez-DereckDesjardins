@@ -112,6 +112,7 @@ async function showPosts(reset = false) {
     await postsPanel.show(reset);
 }
 function showVerificationForm() {
+    hidePosts();
     $('#form').show();
     $("#viewTitle").text("Verification par Courriel");
     renderVerificationForm(sessionStorage.getItem("activeUser"));
@@ -145,30 +146,35 @@ function showError(message, details = "") {
 }
 
 function showCreatePostForm() {
+    hidePosts();
     showForm();
     $("#viewTitle").text("Ajout de nouvelle");
     renderPostForm();
 }
 function showEditPostForm(id) {
+    hidePosts();
     showForm();
     $("#viewTitle").text("Modification");
     renderEditPostForm(id);
 }
 function showDeletePostForm(id) {
+    hidePosts();
     showForm();
     $("#viewTitle").text("Retrait");
     renderDeletePostForm(id);
 }
 function showLoginForm() {
+    hidePosts();
     showForm();
     $('#commit').hide();
     $("#viewTitle").text("Connexion");
     renderLoginForm();
 }
-function showCreateUserForm() {
+function showCreateUserForm(user = null) {
+    hidePosts();
     showForm();
     $("#viewTitle").text("Creation de compte");
-    renderUserForm();
+    renderUserForm(user);
 }
 function showAbout() {
     hidePosts();
@@ -320,7 +326,11 @@ function updateDropDownMenu() {
         DDMenu.append($(`
             <div class="dropdown-item menuItemLayout" id="logoutCmd">
             <i class="menuIcon fa fa-user mx-2"></i> Se déconnecter
-        </div>`));
+        </div>
+        <div class="dropdown-item menuItemLayout" id="editCmd">
+            <i class="menuIcon fa fa-pencil mx-2"></i> Modifier le profil
+        </div>`
+    ));
     }
     DDMenu.append($(`
         <div class="dropdown-item menuItemLayout" id="aboutCmd">
@@ -335,6 +345,9 @@ function updateDropDownMenu() {
     });
     $('#connectCmd').on("click", function () {
         showLoginForm();
+    });
+    $('#editCmd').on("click", function () {
+        showCreateUserForm(JSON.parse(sessionStorage.getItem("activeUser")));
     });
     $('#logoutCmd').on("click", function () {
         Users_API.Logout(JSON.parse(sessionStorage.getItem("activeUser")).Id);
@@ -763,7 +776,8 @@ function renderUserForm(user = null) {
                 id="Password"
                 placeholder="Mot de passe" 
                 required 
-                RequireMessage = 'Veuillez entrer un mot de passe'>${user.Password}</input>
+                RequireMessage = 'Veuillez entrer un mot de passe'
+                value=${user.Password}></input>
             
             <label class="form-label">Avatar</label>
             <div class='imageUploaderContainer' style="max-height:400px; max-width:400px; margin:auto;">
@@ -792,25 +806,22 @@ function renderUserForm(user = null) {
         return $('#saveUser').trigger("click");
     });
     $('#userForm').on("submit", async function (event) {
-        
-        let user = getFormData($("#userForm"));
-        Users_API.Save(user, create).then(async (thenUser) => {
-            user = thenUser;
-            if (user) {
-                if (!create) {
-                    await showPosts();
-                } else {
-                    await showVerificationForm(user);
-                }
-            }
-            else
-                showError("Une erreur est survenue! ", Users_API.currentHttpError);
-        });
         event.preventDefault();
+        console.log(create);
+        let user = getFormData($("#userForm"));
+        Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create);
+
+            if (!create) {
+                await showPosts();
+            } else {
+                await showLoginForm();
+            }
+        if(Users_API.currentHttpError)
+            showError("Une erreur est survenue! ", Users_API.currentHttpError);
     });
-    $('#cancel').on("click", async function () {
-        await showPosts();
-    });
+    // $('#cancel').on("click", async function () {
+    //     await showPosts();
+    // });
 }
 function getFormData($form) {
     // prevent html injections

@@ -84,14 +84,24 @@
         "Name": "Dereck",
         "Email": "dereck.desjardins@hotmail.com",
         "Password": "password",
+<<<<<<< Updated upstream
         "Avatar": "d547d6e1-b74b-11ef-beda-c37c412c898c.png",
         "keepDate": "on",
         "Created": 1733872180,
+=======
+        "Avatar": "eee1ba40-b71d-11ef-9c7c-d5cb4d657619.png",
+        "Date": 1733870466141,
+        "Created": 1733852466,
+>>>>>>> Stashed changes
         "VerifyCode": "verified",
         "Authorizations": {
             "readAccess": 1,
             "writeAccess": 1
         },
+<<<<<<< Updated upstream
         "Id": "d547d6e0-b74b-11ef-beda-c37c412c898c"
+=======
+        "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619"
+>>>>>>> Stashed changes
     }
 ]

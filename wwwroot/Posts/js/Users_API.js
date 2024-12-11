@@ -91,12 +91,14 @@ class Users_API {
     }
     static async Save(data, create = true) {
         Users_API.initHttpState();
+        console.log(data);
         return new Promise(resolve => {
             $.ajax({
                 url: create ? this.API_URL()+`accounts/register`: this.API_URL() + `accounts/modify`,
                 type: create ? "POST" : "PUT",
                 contentType: 'application/json',
                 data: JSON.stringify(data),
+                
                 success: (data) => { resolve(data); },
                 error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
             });
