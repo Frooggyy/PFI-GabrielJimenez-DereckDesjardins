@@ -777,7 +777,7 @@ function renderUserForm(user = null) {
                 placeholder="Mot de passe" 
                 required 
                 RequireMessage = 'Veuillez entrer un mot de passe'
-                value=${user.Password}></input>
+                </input>
             
             <label class="form-label">Avatar</label>
             <div class='imageUploaderContainer' style="max-height:400px; max-width:400px; margin:auto;">
@@ -785,6 +785,7 @@ function renderUserForm(user = null) {
                      newImage='${create}' 
                      controlId='Avatar' 
                      imageSrc='${user.Avatar}' 
+                     value='${user.Avatar}'
                      waitingImage="Loading_icon.gif" >
                 </div>
             </div>
@@ -809,7 +810,9 @@ function renderUserForm(user = null) {
         event.preventDefault();
         console.log(create);
         let user = getFormData($("#userForm"));
-        Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create);
+        Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create).then((thenUser)=>{
+            sessionStorage.setItem("activeUser", thenUser);
+        });
 
             if (!create) {
                 await showPosts();

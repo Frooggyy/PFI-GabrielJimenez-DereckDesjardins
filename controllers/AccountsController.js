@@ -85,7 +85,7 @@ export default class AccountsController extends Controller {
             if (userFound) {
                 if (userFound.VerifyCode == code) {
                     userFound.VerifyCode = "verified";
-                    this.repository.update(userFound.Id, userFound);
+                    this.repository.update(id, userFound);
                     if (this.repository.model.state.isValid) {
                         userFound = this.repository.get(userFound.Id); // get data binded record
                         this.HttpContext.response.JSON(userFound);
@@ -168,18 +168,20 @@ export default class AccountsController extends Controller {
     }
     // PUT:account/modify body payload[{"Id": 0, "Name": "...", "Email": "...", "Password": "..."}]
     modify(data) {
-        let user = this.repository.findByField("Email", data.user.Email)
+        let user = data.user;
         // empty asset members imply no change and there values will be taken from the stored record
         if (AccessControl.writeGranted(data.loggedUser.Authorizations, AccessControl.user())) {
             if (this.repository != null) {
                 user.Created = utilities.nowInSeconds();
-                let foundedUser = this.repository.findByField("Id", user.Id);
+                let foundedUser = this.repository.findByField("Email", user.Email);
+                
                 if (foundedUser != null) {
+                    user.Id = foundedUser.Id
                     user.Authorizations = foundedUser.Authorizations; // user cannot change its own authorizations
                     if (user.Password == '') { // password not changed
                         user.Password = foundedUser.Password;
                     }
-                    user.Authorizations = foundedUser.Authorizations;
+                    
                     if (user.Email != foundedUser.Email) {
                         user.VerifyCode = utilities.makeVerifyCode(6);
                         this.sendVerificationEmail(user);
