@@ -18,7 +18,19 @@ export default class PostModelsController extends Controller {
                 foundPost = repoPost;
         }
         if(foundPost !=null){
-            foundPost.Likes.push(user);
+            let userFound = false;
+            for(let i=0; i<foundPost.Likes.length;i++){
+                if(foundPost.Likes[i].Email == user.Email){
+                    userFound = true;
+                }
+            }
+            if(userFound){
+                foundPost.Likes.pop(user);
+            }else{
+                foundPost.Likes.push(user);
+            }
+            
+            
             let imageFormat = foundPost.Image.split('/');
             foundPost.Image = imageFormat[imageFormat.length-1];
             this.repository.update(post, foundPost);

@@ -17,10 +17,13 @@ export default class Post extends Model {
     bindExtraData(instance){
         instance = super.bindExtraData(instance);
         
-        instance.Likes = [];
         return instance;
     }
     addLike(user){
+        console.log(instance.Likes);
+        if(instance.Likes == undefined){
+            this.addField('Likes', 'array');
+        }
         instance.Likes.push(user);
     }
 }

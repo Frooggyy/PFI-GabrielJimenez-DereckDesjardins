@@ -107,6 +107,9 @@ function intialView() {
 }
 async function showPosts(reset = false) {
     intialView();
+    if(sessionStorage.getItem("activeUser")){
+        console.log(JSON.parse(sessionStorage.getItem("activeUser")));
+    }
     $("#viewTitle").text("Fil de nouvelles");
     periodic_Refresh_paused = false;
     await postsPanel.show(reset);
@@ -203,6 +206,7 @@ function start_Periodic_Refresh() {
         periodicRefreshPeriod * 1000);
 }
 async function renderPosts(queryString) {
+    
     let endOfData = false;
     queryString += "&sort=date,desc";
     compileCategories();
@@ -214,6 +218,7 @@ async function renderPosts(queryString) {
     }
     addWaitingGif();
     let response = await Posts_API.Get(queryString);
+    console.log(response);
     if (!Posts_API.error) {
         currentETag = response.ETag;
         console.log(response)
@@ -236,12 +241,24 @@ async function renderPosts(queryString) {
 function renderPost(post, loggedUser) {
     let date = convertToFrenchDate(UTC_To_Local(post.Date));
     let user = JSON.parse(sessionStorage.getItem("activeUser"));
-    let likedUsers = ""
-    if (post.Likes != []) {
-        post.Likes.forEach(user => {
-            likedUsers += user.name + "\n"
-        })
+    let likedUsers = "";
+    let likeNb =0;
+    let thumbStyle = "fa-regular fa-thumbs-up";
+    if (post.Likes != undefined  ) {
+        if (post.Likes != []) {
+            likeNb = post.Likes.length;
+            post.Likes.forEach(user=>{
+                likedUsers += user.Name + "\n";
+                if(user.Email == JSON.parse(sessionStorage.getItem("activeUser")).Email){
+                    thumbStyle = "fa fa-thumbs-up";
+                }
+            })
+        }
+        else likeNb = 0;
+    }else{
+        likeNb = 0;
     }
+    
     let headerIcons = ""
     if (user) {
         if(user.Id = post.UserId || user.Authorizations.writeAccess == 3){
@@ -249,7 +266,7 @@ function renderPost(post, loggedUser) {
             ` 
             <span class="editCmd cmdIconSmall fa fa-pencil" postId="${post.Id}" title="Modifier nouvelle"></span>
             <span class="deleteCmd cmdIconSmall fa fa-trash" postId="${post.Id}" title="Effacer nouvelle"></span>
-            <span class="likeCmd cmdIconSmall fa fa-thumbs-up" postId="${post.Id}" title="${likedUsers}"> ${post.Likes.length}</span>
+            <span class="likeCmd cmdIconSmall ${thumbStyle}" postId="${post.Id}" title="${likedUsers}"> ${likeNb}</span>
             `;
         }
         else{
@@ -257,7 +274,7 @@ function renderPost(post, loggedUser) {
              `
             <span class="cmdIconSmall"></span>
             <span class="cmdIconSmall"></span>
-            <span class="likeCmd cmdIconSmall fa fa-thumbs-up" postId="${post.Id}" title="${likedUsers}"> ${post.Likes.length}</span>
+            <span class="likeCmd cmdIconSmall ${thumbStyle}" postId="${post.Id}" title="${likedUsers}"> ${likeNb}</span>
             `;
         }
 
@@ -419,9 +436,7 @@ function removeWaitingGif() {
 }
 
 async function addLike(user, postId) {
-    await Posts_API.Like({user : user, postId:postId}).then(()=>{
-        renderPosts();
-    });;
+    await Posts_API.Like({user : user, postId:postId});
 }
 /////////////////////// Posts content manipulation ///////////////////////////////////////////////////////
 
@@ -820,9 +835,9 @@ function renderUserForm(user = null) {
         event.preventDefault();
         console.log(create);
         let user = getFormData($("#userForm"));
-        Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create).then(async (thenUser)=>{
+        await Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create).then(async (thenUser)=>{
             if(!create){
-                sessionStorage.setItem("activeUser", await JSON.stringify(thenUser));
+                sessionStorage.setItem("activeUser", JSON.stringify(thenUser));
                 console.log(thenUser);
             }
                 
