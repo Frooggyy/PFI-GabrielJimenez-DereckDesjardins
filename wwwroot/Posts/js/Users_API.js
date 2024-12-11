@@ -68,9 +68,10 @@ class Users_API {
     static async Verify(data){
         return new Promise(resolve=>{
             $.ajax({
-                url : this.API_URL()+`accounts/verify?id=${data.Id}&code=${data.code}`,
+                url : this.API_URL()+`accounts/verify`,
                 type: "GET",
                 contentType: "application/json",
+                data:{Id:data.id, code:data.code},
                 success: (data)=>{resolve(data);},
                 error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
             });
@@ -91,7 +92,6 @@ class Users_API {
     }
     static async Save(data, create = true) {
         Users_API.initHttpState();
-        console.log(data);
         return new Promise(resolve => {
             $.ajax({
                 url: create ? this.API_URL()+`accounts/register`: this.API_URL() + `accounts/modify`,

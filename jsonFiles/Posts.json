@@ -72,12 +72,30 @@
         "Id": "b3a2f300-a060-11ef-966f-f12ac67d776c"
     },
     {
-        "Id": "c9e52160-b753-11ef-8f2c-593cfecf7d84",
         "Date": 1733893596911,
         "Category": "assdasda2",
         "Title": "2adsadasd",
         "Text": "2adsasdas",
         "Image": "c9e54870-b753-11ef-8f2c-593cfecf7d84.png",
-        "UserId": "d547d6e0-b74b-11ef-beda-c37c412c898c"
+        "UserId": "d547d6e0-b74b-11ef-beda-c37c412c898c",
+        "Likes": [
+            {
+                "Id": "fc6880d0-b7dc-11ef-8ec2-f96ff032a522",
+                "Name": "gfbm",
+                "Email": "froge@yopmail.com",
+                "Password": "************",
+                "Avatar": "http://localhost:5000/assetsRepository/fd925ad0-b7dc-11ef-8ec2-f96ff032a522.jpeg",
+                "keepDate": "on",
+                "Created": 1733934523,
+                "VerifyCode": "unverified",
+                "Authorizations": {
+                    "readAccess": 1,
+                    "writeAccess": 1
+                },
+                "isBlocked": false,
+                "isAdmin": false
+            }
+        ],
+        "Id": "c9e52160-b753-11ef-8f2c-593cfecf7d84"
     }
 ]

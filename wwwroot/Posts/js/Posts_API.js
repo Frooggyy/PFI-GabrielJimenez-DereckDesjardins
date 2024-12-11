@@ -78,4 +78,16 @@ class Posts_API {
             });
         });
     }
+    static async Like(data){
+        return new Promise(resolve =>{
+            $.ajax({
+                url:"http://localhost:5000" +"/posts/like",
+                type:"PUT",
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: (data) => { resolve(data); },
+                error: (xhr) => { Posts_API.setHttpErrorState(xhr); resolve(null); }
+            });
+        })
+    }
 }

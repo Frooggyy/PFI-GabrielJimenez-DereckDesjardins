@@ -85,7 +85,6 @@ export default class AccountsController extends Controller {
             if (userFound) {
                 if (userFound.VerifyCode == code) {
                     userFound.VerifyCode = "verified";
-                    this.repository.update(id, userFound);
                     if (this.repository.model.state.isValid) {
                         userFound = this.repository.get(userFound.Id); // get data binded record
                         this.HttpContext.response.JSON(userFound);
@@ -188,10 +187,14 @@ export default class AccountsController extends Controller {
                     } else {
                         user.VerifyCode = foundedUser.VerifyCode;
                     }
-                    this.repository.update(user.Id, user);
-                    let updatedUser = this.repository.get(user.Id); // must get record user.id with binded data
+                    if(user.Avatar == ''){//avatar not changed
+                        user.Avatar = foundedUser.Avatar;
+                    }
+                    
+                    let updatedUser = this.repository.update(user.Id, user);// must get record user.id with binded data
 
                     if (this.repository.model.state.isValid) {
+                        console.log(updatedUser);
                         this.HttpContext.response.JSON(updatedUser, this.repository.ETag);
                     }
                     else {

@@ -10,12 +10,13 @@ export default class Post extends Model {
         this.addField('Image', 'asset');
         this.addField('Date', 'integer');
         this.addField('UserId', 'string');
+        this.addField('Likes', 'array');
         this.setKey("Title");
     }
 
     bindExtraData(instance){
         instance = super.bindExtraData(instance);
-        this.addField('Likes', 'array');
+        
         instance.Likes = [];
         return instance;
     }

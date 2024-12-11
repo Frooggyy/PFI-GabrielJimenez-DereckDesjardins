@@ -216,6 +216,7 @@ async function renderPosts(queryString) {
     let response = await Posts_API.Get(queryString);
     if (!Posts_API.error) {
         currentETag = response.ETag;
+        console.log(response)
         let Posts = response.data;
         if (Posts.length > 0) {
             Posts.forEach(Post => {
@@ -384,7 +385,9 @@ function attach_Posts_UI_Events_Callback() {
     });
     $(".likeCmd").off();
     $(".likeCmd").on("click", function () {
-        addLike(user);
+        let postId = $(this).attr("postId");
+        let user = JSON.parse(sessionStorage.getItem("activeUser"))
+        addLike(user, postId);
     });
 
 
@@ -415,8 +418,10 @@ function removeWaitingGif() {
     $("#waitingGif").remove();
 }
 
-function addLike(user) {
-    console.log(user);
+async function addLike(user, postId) {
+    await Posts_API.Like({user : user, postId:postId}).then(()=>{
+        renderPosts();
+    });;
 }
 /////////////////////// Posts content manipulation ///////////////////////////////////////////////////////
 
@@ -743,7 +748,13 @@ function renderLoginForm() {
 }
 function renderUserForm(user = null) {
     let create = user == null;
-    if (create) user = newUser();
+    let requirePassword = "";
+    if (create) {
+        user = newUser();
+        requirePassword= "required RequireMessage = 'Veuillez entrer un mot de passe'"
+    }
+    console.log(user);
+    console.log(JSON.parse(sessionStorage.getItem("activeUser")));
     $("#form").show();
     $("#form").empty();
     $("#form").append(`
@@ -775,8 +786,7 @@ function renderUserForm(user = null) {
                 name="Password" 
                 id="Password"
                 placeholder="Mot de passe" 
-                required 
-                RequireMessage = 'Veuillez entrer un mot de passe'
+                ${requirePassword}
                 </input>
             
             <label class="form-label">Avatar</label>
@@ -810,15 +820,15 @@ function renderUserForm(user = null) {
         event.preventDefault();
         console.log(create);
         let user = getFormData($("#userForm"));
-        Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create).then((thenUser)=>{
-            sessionStorage.setItem("activeUser", thenUser);
+        Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create).then(async (thenUser)=>{
+            if(!create){
+                sessionStorage.setItem("activeUser", await JSON.stringify(thenUser));
+                console.log(thenUser);
+            }
+                
         });
 
-            if (!create) {
-                await showPosts();
-            } else {
-                await showLoginForm();
-            }
+        await showPosts();
         if(Users_API.currentHttpError)
             showError("Une erreur est survenue! ", Users_API.currentHttpError);
     });

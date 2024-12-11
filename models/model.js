@@ -83,18 +83,36 @@ export default class Model {
     }
     handleAssets(instance, storedInstance = null) {
         this.fields.forEach(field => {
-            if ((field.name in instance) && (field.type == "asset")) {
-                if (instance[field.name] == '') {
-                    if (storedInstance != null) {
-                        instance[field.name] = storedInstance[field.name];
+            if(storedInstance){
+                if(!(instance[field.name] == storedInstance[field.name])){
+                    if ((field.name in instance) && (field.type == "asset")) {
+                        if (instance[field.name] == '') {
+                            if (storedInstance != null) {
+                                instance[field.name] = storedInstance[field.name];
+                            }
+                        } else {
+                            instance[field.name] = AssetsRepository.save(instance[field.name]);
+                            if (storedInstance != null) {
+                                AssetsRepository.remove(storedInstance[field.name]);
+                            }
+                        }
                     }
-                } else {
-                    instance[field.name] = AssetsRepository.save(instance[field.name]);
-                    if (storedInstance != null) {
-                        AssetsRepository.remove(storedInstance[field.name]);
+                }
+            }else{
+                if ((field.name in instance) && (field.type == "asset")) {
+                    if (instance[field.name] == '') {
+                        if (storedInstance != null) {
+                            instance[field.name] = storedInstance[field.name];
+                        }
+                    } else {
+                        instance[field.name] = AssetsRepository.save(instance[field.name]);
+                        if (storedInstance != null) {
+                            AssetsRepository.remove(storedInstance[field.name]);
+                        }
                     }
                 }
             }
+            
         });
     }
     removeAssets(instance) {
