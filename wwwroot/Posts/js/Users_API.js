@@ -33,7 +33,10 @@ class Users_API {
             $.ajax({
                 url: this.API_URL()+`api/accounts?email=${data.Email}`,
                 type: "GET",
-                contentType: 'application/json',
+                headers: {
+                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
+                    "Content-Type": "application/json"
+                },
                 success: (data) => { resolve(data); },
                 error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
             });
@@ -84,6 +87,10 @@ class Users_API {
         return new Promise(resolve=>{
             $.ajax({
                 url : this.API_URL()+`accounts/logout?userId=${userId}`,
+                headers: {
+                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
+                    "Content-Type": "application/json"
+                },
                 type: "GET",
                 success: (data)=>{resolve(data);},
                 error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
@@ -96,19 +103,32 @@ class Users_API {
             $.ajax({
                 url: create ? this.API_URL()+`accounts/register`: this.API_URL() + `accounts/modify`,
                 type: create ? "POST" : "PUT",
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                
+                headers:
+                create? {
+                    "Content-Type": "application/json"
+                }
+                :
+                {
+                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
+                    "Content-Type": "application/json"
+                },
+                data:JSON.stringify(data),
                 success: (data) => { resolve(data); },
                 error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
             });
         });
     }
-    static async Delete(id) {
+    static async Delete(data) {
+        console.log(data);
         return new Promise(resolve => {
             $.ajax({
-                url: this.API_URL() + "/" + id,
-                type: "DELETE",
+                url: this.API_URL() + `accounts/remove/${data.user.Id}`,
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
+                    "Content-Type": "application/json"
+                },
+                data:{data: JSON.stringify(data)},
                 complete: () => {
                     Users_API.initHttpState();
                     resolve(true);

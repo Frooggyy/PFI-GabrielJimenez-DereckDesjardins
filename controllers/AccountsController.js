@@ -166,35 +166,28 @@ export default class AccountsController extends Controller {
             this.HttpContext.response.notImplemented();
     }
     // PUT:account/modify body payload[{"Id": 0, "Name": "...", "Email": "...", "Password": "..."}]
-    modify(data) {
-        let user = data.user;
-        // empty asset members imply no change and there values will be taken from the stored record
-        if (AccessControl.writeGranted(data.loggedUser.Authorizations, AccessControl.user())) {
+    modify(user) {
+        console.log(this.HttpContext.req.headers);
+        if (AccessControl.writeGranted(this.HttpContext.authorizations, AccessControl.user())) {
             if (this.repository != null) {
                 user.Created = utilities.nowInSeconds();
-                let foundedUser = this.repository.findByField("Email", user.Email);
-                
+                let foundedUser = this.repository.findByField("Id", user.Id);
                 if (foundedUser != null) {
-                    user.Id = foundedUser.Id
                     user.Authorizations = foundedUser.Authorizations; // user cannot change its own authorizations
                     if (user.Password == '') { // password not changed
                         user.Password = foundedUser.Password;
                     }
-                    
+                    user.Authorizations = foundedUser.Authorizations;
                     if (user.Email != foundedUser.Email) {
                         user.VerifyCode = utilities.makeVerifyCode(6);
                         this.sendVerificationEmail(user);
                     } else {
                         user.VerifyCode = foundedUser.VerifyCode;
                     }
-                    if(user.Avatar == ''){//avatar not changed
-                        user.Avatar = foundedUser.Avatar;
-                    }
-                    
-                    let updatedUser = this.repository.update(user.Id, user);// must get record user.id with binded data
+                    this.repository.update(user.Id, user);
+                    let updatedUser = this.repository.get(user.Id); // must get record user.id with binded data
 
                     if (this.repository.model.state.isValid) {
-                        console.log(updatedUser);
                         this.HttpContext.response.JSON(updatedUser, this.repository.ETag);
                     }
                     else {
@@ -214,6 +207,7 @@ export default class AccountsController extends Controller {
     // GET:account/remove/id
     remove(id) { // warning! this is not an API endpoint 
         // todo make sure that the requester has legitimity to delete ethier itself or its an admin
+        console.log(this.HttpContext.req.headers);
         if (AccessControl.writeGrantedAdminOrOwner(this.HttpContext.authorizations, this.requiredAuthorizations, id)) {
             // todo
         }

@@ -249,9 +249,12 @@ function renderPost(post, loggedUser) {
             likeNb = post.Likes.length;
             post.Likes.forEach(user=>{
                 likedUsers += user.Name + "\n";
-                if(user.Email == JSON.parse(sessionStorage.getItem("activeUser")).Email){
-                    thumbStyle = "fa fa-thumbs-up";
+                if(sessionStorage.getItem("activeUser")){
+                    if(user.Email == JSON.parse(sessionStorage.getItem("activeUser")).Email){
+                        thumbStyle = "fa fa-thumbs-up";
+                    }
                 }
+                
             })
         }
         else likeNb = 0;
@@ -819,10 +822,16 @@ function renderUserForm(user = null) {
                 <label for="keepDate"> Conserver la date de création </label>
             </div>
             <input type="submit" value="Enregistrer" id="saveUser" class="btn btn-primary display">
-            <div id="cancel" class="btn btn-secondary display"> Annuler </div>
+            <br>
+            <div id="cancel" class="btn btn-primary display" style="background-color:slategrey; border-color:slategrey;"> Annuler </div>
+            
         </form>
+        <hr>
+        <div id="deleteUser" class="btn btn-primary display" style="background-color:red; border-color:red;"> Effacer</div>
+        
     `);
     if (create) $("#keepDateControl").hide();
+    if (create) $("#deleteUser").hide();
 
     initImageUploaders();
     initFormValidation(); // important do to after all html injection!
@@ -847,9 +856,14 @@ function renderUserForm(user = null) {
         if(Users_API.currentHttpError)
             showError("Une erreur est survenue! ", Users_API.currentHttpError);
     });
-    // $('#cancel').on("click", async function () {
-    //     await showPosts();
-    // });
+    $('#cancel').on("click", async function () {
+        await showPosts();
+    });
+
+    $('#deleteUser').on("click", async function(){
+        console.log(JSON.parse(sessionStorage.getItem("activeToken")));
+        await Users_API.Delete({user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))});
+    })
 }
 function getFormData($form) {
     // prevent html injections
