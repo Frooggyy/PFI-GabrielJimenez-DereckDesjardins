@@ -228,7 +228,7 @@ async function renderPosts(queryString) {
 }
 function renderPost(post, loggedUser) {
     let date = convertToFrenchDate(UTC_To_Local(post.Date));
-
+    let user = JSON.parse(sessionStorage.getItem("activeUser"));
     let likedUsers = ""
     if (post.Likes != []) {
         post.Likes.forEach(user => {
@@ -236,14 +236,24 @@ function renderPost(post, loggedUser) {
         })
     }
     let headerIcons = ""
-    if (sessionStorage.getItem("activeUser")) {
-
-        headerIcons =
-            `
+    if (user) {
+        if(user.Id = post.UserId || user.Authorizations.writeAccess == 3){
+            headerIcons =
+            ` 
             <span class="editCmd cmdIconSmall fa fa-pencil" postId="${post.Id}" title="Modifier nouvelle"></span>
             <span class="deleteCmd cmdIconSmall fa fa-trash" postId="${post.Id}" title="Effacer nouvelle"></span>
             <span class="likeCmd cmdIconSmall fa fa-thumbs-up" postId="${post.Id}" title="${likedUsers}"> ${post.Likes.length}</span>
             `;
+        }
+        else{
+            headerIcons =
+             `
+            <span class="cmdIconSmall"></span>
+            <span class="cmdIconSmall"></span>
+            <span class="likeCmd cmdIconSmall fa fa-thumbs-up" postId="${post.Id}" title="${likedUsers}"> ${post.Likes.length}</span>
+            `;
+        }
+
     }
 
 
@@ -505,18 +515,20 @@ function newPost() {
     Post.Text = "";
     Post.Image = "news-logo-upload.png";
     Post.Category = "";
+    Post.UserId = "";
     return Post;
 }
 function renderPostForm(post = null) {
     let create = post == null;
     if (create) post = newPost();
+    user = JSON.parse(sessionStorage.getItem('activeUser'));
     $("#form").show();
     $("#form").empty();
     $("#form").append(`
         <form class="form" id="postForm">
             <input type="hidden" name="Id" value="${post.Id}"/>
              <input type="hidden" name="Date" value="${post.Date}"/>
-            <label for="Category" class="form-label">Catégorie </label>
+            <label for="Category" class="form-label">Catégorie</label>
             <input 
                 class="form-control"
                 name="Category"
@@ -573,6 +585,8 @@ function renderPostForm(post = null) {
     $('#postForm').on("submit", async function (event) {
         event.preventDefault();
         let post = getFormData($("#postForm"));
+        user = JSON.parse(sessionStorage.getItem('activeUser'));
+        post.UserId = user.Id;
         if (post.Category != selectedCategory)
             selectedCategory = "";
         if (create || !('keepDate' in post))
