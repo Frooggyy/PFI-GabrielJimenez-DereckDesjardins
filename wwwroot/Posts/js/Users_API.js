@@ -141,10 +141,6 @@ class Users_API {
         return new Promise(resolve=>{
             $.ajax({
                 url : this.API_URL()+`accounts/logout?userId=${userId}`,
-                headers: {
-                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
-                    "Content-Type": "application/json"
-                },
                 type: "GET",
                 success: (data)=>{resolve(data);},
                 error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
@@ -176,7 +172,7 @@ class Users_API {
         console.log(data);
         return new Promise(resolve => {
             $.ajax({
-                url: this.API_URL() + `accounts/remove/${data.user.Id}`,
+                url: this.API_URL() + `accounts/remove/${data.Id}`,
                 type: "GET",
                 headers: {
                     "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,

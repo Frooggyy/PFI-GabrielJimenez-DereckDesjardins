@@ -160,6 +160,9 @@ function showEditPostForm(id) {
     $("#viewTitle").text("Modification");
     renderEditPostForm(id);
 }
+function showDeleteConfirm(user){
+    renderDeleteConfirm(user);
+}
 function showDeletePostForm(id) {
     hidePosts();
     showForm();
@@ -851,12 +854,18 @@ function renderUserForm(user = null) {
         user = newUser();
         requirePassword= "required RequireMessage = 'Veuillez entrer un mot de passe'"
     }
+    let idInput ="";
+    if(!create){
+        idInput = `<input name="Id" id="Id" type="hidden" value=${user.Id}`;
+    }
     console.log(user);
     console.log(JSON.parse(sessionStorage.getItem("activeUser")));
     $("#form").show();
     $("#form").empty();
     $("#form").append(`
-        <form class="form" id="userForm">>
+        
+        <form class="form" id="userForm">
+            ${idInput}
             <label for="Name" class="form-label">Nom </label>
             <input 
                 class="form-control"
@@ -924,7 +933,7 @@ function renderUserForm(user = null) {
         event.preventDefault();
         console.log(create);
         let user = getFormData($("#userForm"));
-        await Users_API.Save(create? user :{user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))}, create).then(async (thenUser)=>{
+        await Users_API.Save( user, create).then(async (thenUser)=>{
             if(!create){
                 sessionStorage.setItem("activeUser", JSON.stringify(thenUser));
                 console.log(thenUser);
@@ -941,9 +950,30 @@ function renderUserForm(user = null) {
     });
 
     $('#deleteUser').on("click", async function(){
-        console.log(JSON.parse(sessionStorage.getItem("activeToken")));
-        await Users_API.Delete({user: user, loggedUser: JSON.parse(sessionStorage.getItem("activeUser"))});
+
+        showDeleteConfirm(user);
     })
+}
+
+function renderDeleteConfirm(user){
+    $("#form").show();
+    $("#form").empty();
+    $("#form").append(`
+        <h1 style="flex:1; justify-self:center;">Voulez-vous vraiment supprimer ce compte?</h1>
+        <div id="deleteUser" class="btn btn-primary display" style="background-color:red; border-color:red;"> Effacer</div>
+        <br><br>
+        <div id="cancelDelete" class="btn btn-primary display" style="background-color:slategrey; border-color:red;"> Annuler</div>
+    `);
+    $("#cancelDelete").on("click", ()=>{
+        showCreateUserForm(user);
+    });
+    $("#deleteUser").on("click", ()=>{
+        Users_API.Delete(user).then(()=>{
+            sessionStorage.removeItem("activeUser");
+            sessionStorage.removeItem("activeToken");
+        });
+    });
+
 }
 function getFormData($form) {
     // prevent html injections
