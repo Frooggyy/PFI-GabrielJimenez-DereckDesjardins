@@ -208,8 +208,17 @@ export default class AccountsController extends Controller {
     remove(id) { // warning! this is not an API endpoint 
         // todo make sure that the requester has legitimity to delete ethier itself or its an admin
         console.log(this.HttpContext.req.headers);
-        if (AccessControl.writeGrantedAdminOrOwner(this.HttpContext.authorizations, this.requiredAuthorizations, id)) {
-            // todo
-        }
+        if (AccessControl.writeGrantedAdminOrOwner(this.HttpContext, this.requiredAuthorizations, id)) {
+            if (this.repository != null) {
+                let foundedUser = this.repository.findByField("Id", id);
+                if (foundedUser != null) {
+                    this.logout()
+                    this.repository.remove(id)
+                } else
+                    this.HttpContext.response.notFound();
+            } else
+                this.HttpContext.response.notImplemented();
+        } else
+            this.HttpContext.response.unAuthorized();
     }
 }
