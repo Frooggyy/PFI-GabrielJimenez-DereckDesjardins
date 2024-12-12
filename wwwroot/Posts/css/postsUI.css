@@ -113,6 +113,11 @@
     padding-top: 4px;
     border-bottom: 1px solid lightgray !important;
 }
+.postUser{
+    display: grid;
+    grid-template-columns: 1fr 8fr 4fr;
+    padding-bottom: 5px;
+}
 
 .hideExtra {
     overflow: hidden;

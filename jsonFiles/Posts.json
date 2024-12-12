@@ -113,5 +113,30 @@
         "User": "d547d6e0-b74b-11ef-beda-c37c412c898c",
         "Likes": [],
         "Id": "c9e52160-b753-11ef-8f2c-593cfecf7d84"
+    },
+    {
+        "Id": "854fc200-b83c-11ef-b80e-4331a3d39939",
+        "Date": 1733993554583,
+        "Likes": "",
+        "Category": "Cegep",
+        "Title": "asda",
+        "Text": "asdas",
+        "Image": "854fe910-b83c-11ef-b80e-4331a3d39939.png",
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "Avatar": "http://localhost:5000/assetsRepository/a634d710-46c0-11ee-9c7d-4dfffb69e19c.png",
+            "Date": 1733870466141,
+            "Created": 1733852466,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619",
+            "isBlocked": false,
+            "isAdmin": false
+        }
     }
 ]

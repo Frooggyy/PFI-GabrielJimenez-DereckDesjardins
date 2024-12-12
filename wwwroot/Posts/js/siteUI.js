@@ -287,6 +287,7 @@ function renderPost(post, loggedUser) {
         }
 
     }
+    console.log(post.User);
     return $(`
         <div class="post" id="${post.Id}">
             <div class="postHeader">
@@ -295,8 +296,12 @@ function renderPost(post, loggedUser) {
             </div>
             <div class="postTitle"> ${post.Title} </div>
             <img class="postImage" src='${post.Image}'/>
-            <div>${post.User}</div>
-            <div class="postDate"> ${date} </div>
+            <div class="postUser">
+                <img src="${post.User.Avatar}" class="UserAvatarXSmall">
+                <div>${post.User.Name}</div>
+                <div class="postDate"> ${date} </div>
+            </div>
+            
             <div postId="${post.Id}" class="postTextContainer hideExtra">
                 <div class="postText" >${post.Text}</div>
             </div>
@@ -400,6 +405,13 @@ function updateDropDownMenu() {
     let selectClass = selectedCategory === "" ? "fa-check" : "fa-fw";
     DDMenu.empty();
     if(sessionStorage.getItem('activeUser')){
+        DDMenu.append($(`
+            <div class="menuPhotoLayout">
+                 <img src="${JSON.parse(sessionStorage.getItem('activeUser')).Avatar}" alt="${JSON.parse(sessionStorage.getItem('activeUser')).Avatar}" class="UserAvatarXSmall">
+                 <div>${JSON.parse(sessionStorage.getItem('activeUser')).Name}</div>
+            </div>
+        `));
+        DDMenu.append($(`<div class="dropdown-divider"></div>`));
         if(JSON.parse(sessionStorage.getItem('activeUser')).Authorizations.readAccess == 3){
             DDMenu.append($(`
                 <div class="dropdown-item menuItemLayout" id="gestionCmd">
@@ -714,6 +726,7 @@ function renderPostForm(post = null) {
         let post = getFormData($("#postForm"));
         user = JSON.parse(sessionStorage.getItem('activeUser'));
         post.User = user;
+        console.log(user);
         if (post.Category != selectedCategory)
             selectedCategory = "";
         if (create || !('keepDate' in post))

@@ -158,6 +158,13 @@ body {
     grid-template-columns: 35px auto;
     align-items: center;
 }
+.menuPhotoLayout {
+    display: grid;
+    grid-template-columns: 50px auto;
+    align-items: center;
+    padding-left: 10px;
+    font-weight: bold;
+}
 
 .appLogo {
     height: 40px;
