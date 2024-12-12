@@ -78,6 +78,21 @@ class Posts_API {
             });
         });
     }
+    static async DeleteAll(userId){
+        return new Promise(resolve => {
+            $.ajax({
+                url: "http://localhost:5000" +"/posts/deleteAll",
+                type: "DELETE",
+                complete: () => {
+                    Posts_API.initHttpState();
+                    resolve(true);
+                },
+                error: (xhr) => {
+                    Posts_API.setHttpErrorState(xhr); resolve(null);
+                }
+            });
+        });
+    }
     static async Like(data){
         return new Promise(resolve =>{
             $.ajax({

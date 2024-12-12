@@ -61,10 +61,11 @@ class Users_API {
 
     static async Promote(data) {
         Users_API.initHttpState();
+        
         return new Promise(resolve => {
             $.ajax({
                 url: this.API_URL()+`accounts/promote`,
-                type: "GET",
+                type: "POST",
                 headers: {
                     "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
                     "Content-Type": "application/json"
@@ -82,7 +83,7 @@ class Users_API {
         return new Promise(resolve => {
             $.ajax({
                 url: this.API_URL()+`accounts/block`,
-                type: "GET",
+                type: "POST",
                 headers: {
                     "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
                     "Content-Type": "application/json"
@@ -118,17 +119,16 @@ class Users_API {
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: (data)=>{resolve(data);},
-                error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
+                error: (xhr)=>{console.log(xhr);Users_API.setHttpErrorState(xhr); resolve(xhr.responseJSON);}
             });
         });
     }
     static async Verify(data){
         return new Promise(resolve=>{
             $.ajax({
-                url : this.API_URL()+`accounts/verify`,
+                url : this.API_URL()+`accounts/verify?Id=${data.Id}&code=${data.code}`,
                 type: "GET",
                 contentType: "application/json",
-                data:{Id:data.id, code:data.code},
                 success: (data)=>{resolve(data);},
                 error: (xhr)=>{Users_API.setHttpErrorState(xhr); resolve(null);}
             });
@@ -172,13 +172,13 @@ class Users_API {
         console.log(data);
         return new Promise(resolve => {
             $.ajax({
-                url: this.API_URL() + `accounts/remove/${data.Id}`,
+                url: this.API_URL() + `accounts/remove/${data}`,
                 type: "GET",
                 headers: {
                     "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
                     "Content-Type": "application/json"
                 },
-                data:{data: JSON.stringify(data)},
+                data:{userId:JSON.stringify(data)},
                 complete: () => {
                     Users_API.initHttpState();
                     resolve(true);

@@ -27,7 +27,11 @@ export default class PostModelsController extends Controller {
             if(userFound){
                 foundPost.Likes.pop(user);
             }else{
-                foundPost.Likes.push(user);
+                if(foundPost.Likes==""){
+                    foundPost.Likes=[];
+                    foundPost.Likes.push(user);
+                }
+                
             }
             
             
@@ -36,5 +40,8 @@ export default class PostModelsController extends Controller {
             this.repository.update(post, foundPost);
 
         }
+    }
+    deleteAll(userId){
+        console.log(userId);
     }
 }

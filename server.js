@@ -19,6 +19,7 @@ RouteRegister.add('GET', 'accounts', 'conflict');
 RouteRegister.add('POST', 'accounts', 'block');
 RouteRegister.add('POST', 'accounts', 'promote');
 RouteRegister.add('PUT', 'posts', 'like');
+RouteRegister.add('DELETE', 'posts', 'deleteAll');
 
 let server = new APIServer();
 server.start();
