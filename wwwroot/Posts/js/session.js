@@ -42,7 +42,6 @@ function startCountdown() {
     if (timeLeft != infinite) {
         currentTimeouID = setInterval(() => {
             timeLeft = timeLeft - 1;
-            console.log('ticktock');
             if (timeLeft > 0) {
                 if (timeLeft <= 50) {
                     $(".popup").show();
@@ -56,7 +55,7 @@ function startCountdown() {
                     timeoutCallBack();
                 }
             }
-        }, 50);
+        }, 1000);
     }
 }
 function closePopup() {

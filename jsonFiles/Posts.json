@@ -7,7 +7,22 @@
         "Image": "74d2e771-9e17-11ef-aadd-b152ce707884.avif",
         "Likes": [],
         "Id": "74d2e770-9e17-11ef-aadd-b152ce707884",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "Avatar": "http://localhost:5000/assetsRepository/a634d710-46c0-11ee-9c7d-4dfffb69e19c.png",
+            "Date": 1733870466141,
+            "Created": 1733852466,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619",
+            "isBlocked": false,
+            "isAdmin": false
+        }
     },
     {
         "Date": 1731153655372,
@@ -17,7 +32,22 @@
         "Image": "4650a9c1-9e92-11ef-acc7-93de5c15b178.avif",
         "Likes": [],
         "Id": "4650a9c0-9e92-11ef-acc7-93de5c15b178",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "Avatar": "http://localhost:5000/assetsRepository/a634d710-46c0-11ee-9c7d-4dfffb69e19c.png",
+            "Date": 1733870466141,
+            "Created": 1733852466,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619",
+            "isBlocked": false,
+            "isAdmin": false
+        }
     },
     {
         "Date": 1731253744676,
@@ -27,7 +57,22 @@
         "Image": "99abed51-9e92-11ef-acc7-93de5c15b178.avif",
         "Likes": [],
         "Id": "99abed50-9e92-11ef-acc7-93de5c15b178",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "Avatar": "http://localhost:5000/assetsRepository/a634d710-46c0-11ee-9c7d-4dfffb69e19c.png",
+            "Date": 1733870466141,
+            "Created": 1733852466,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619",
+            "isBlocked": false,
+            "isAdmin": false
+        }
     },
     {
         "Date": 1732332966494,
@@ -49,68 +94,27 @@
                 },
                 "VerifyCode": 188097,
                 "Id": "7d82ef00-b7f8-11ef-b7d7-c1d2a14660e3"
+            },
+            {
+                "Name": "Dereck",
+                "Email": "dereck.desjardins@hotmail.com",
+                "EmailVerif": "dereck.desjardins@hotmail.com",
+                "Password": "************",
+                "PasswordVerif": "password",
+                "Avatar": "http://localhost:5000/assetsRepository/4dc545f0-b885-11ef-ae15-5f69b992fa8b.jpeg",
+                "keepDate": "on",
+                "Created": 1734006815,
+                "VerifyCode": "verified",
+                "Authorizations": {
+                    "readAccess": 1,
+                    "writeAccess": 1
+                },
+                "Verifycode": 674668,
+                "Id": "4dc51ee0-b885-11ef-ae15-5f69b992fa8b",
+                "isBlocked": false,
+                "isAdmin": false
             }
         ],
-        "Id": "862171f0-9eb6-11ef-b0c1-abd3892cdb73",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
-    },
-    {
-        "Date": 1731243369602,
-        "Category": "Santé",
-        "Title": "Les œufs de poule pour améliorer le traitement des cancers chez les enfants",
-        "Text": "Des chercheurs de l’Université de la Colombie-Britannique (UBC) veulent améliorer les traitements des enfants atteints de cancer. En faisant croître des tumeurs dans des œufs, ils étudient la façon dont certains médicaments déjà approuvés peuvent contribuer au traitement contre des cancers infantiles.\r\n\r\nL'œuf de poule n'a pas le système immunitaire nécessaire pour rejeter les tumeurs implantées, explique Chinten James Lim, professeur agrégé au département de pédiatrie de l'UBC et chercheur à l’Institut de recherche de l’Hôpital pour enfants de la Colombie-Britannique.\r\n\r\nL’œuf de poule est aussi hautement vascularisé, ce qui permet à la tumeur de croître rapidement. [L’œuf] fournit les différents éléments que la tumeur voit chez le patient, c'est-à-dire qu'elle baigne dans des nutriments qui lui permettent de se développer, précise Chinten James Lim.\r\n\r\nLes médicaments, le principal défi :\r\n\r\nChinten James Lim estime que l'un des plus grands défis du traitement contre les cancers infantiles est l'accessibilité des médicaments.\r\n\r\nLes cancers infantiles sont des cancers très rares au sein de la population. [...] On ne dispose donc pas de très nombreuses données pour réaliser des études cliniques de grande envergure, indique le chercheur.\r\n\r\nPar conséquent, le nombre de produits thérapeutiques approuvés pour les enfants n'est pas le même que pour les cancers des adultes.\r\n\r\nUne citation deChinten James Lim, professeur agrégé au département de pédiatrie de l'Université de la Colombie-Britannique\r\nL’Agence de la santé publique du Canada indique que le taux de survie au cancer après cinq ans est de près de 84 % chez les enfants. Chinten James Lim, de son côté, estime que ce taux peut s’améliorer avec des traitements plus précis.",
-        "Image": "0598d2c1-9eb7-11ef-b0c1-abd3892cdb73.avif",
-        "Likes": [],
-        "Id": "0598d2c0-9eb7-11ef-b0c1-abd3892cdb73",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
-    },
-    {
-        "Date": 1732332957953,
-        "Category": "Santé",
-        "Title": "Comment les écarts de température affectent votre santé?",
-        "Text": "La WWW météo des dernières semaines a été surprenante avec des journées bien au-dessus des normales de saison, suivies d’une chute rapide des températures. Ce yoyo a des impacts sur la santé.\r\n\r\nLe professeur en épidémiologie à l’École interdisciplinaire des sciences de la santé de l'Université d’Ottawa, le Dr Éric Lavigne explique que les changements rapides peuvent favoriser la transmission de virus, entraîner des maladies respiratoires et augmenter les coûts pour le système de santé.",
-        "Image": "2b3d0dc0-9eb7-11ef-b0c1-abd3892cdb73.avif",
-        "Likes": [],
-        "Id": "2b3ce6b0-9eb7-11ef-b0c1-abd3892cdb73",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
-    },
-    {
-        "Date": 1731352047602,
-        "Category": "Santé",
-        "Title": "Le Phoenix de Sherbrooke et le SPS allient leurs forces pour le don de sang",
-        "Text": "La collecte de sang du Phoenix et du Service de police de Sherbrooke (SPS) revient cette année. Sur un objectif de 400 donneurs, il en manque encore 150, alors que la collecte a lieu le lundi 11 novembre, à l'hôtel Delta de Sherbrooke.\r\n\r\nC'est une situation qui n'est pas idéale pour l'organisme. Héma-Québec a un objectif de 1000 dons par jour à recueillir à travers le Québec. C'est ainsi que l'organisme peut continuer de répondre à la demande.\r\n\r\nAu moment d’écrire ces lignes, 250 donneurs avaient pris rendez-vous pour la collecte, alors qu’il est également possible de simplement se présenter, si l’horaire le permet.\r\n\r\nSelon la porte-parole d'Héma-Québec, Josée Larivée, il est difficile de déterminer la cause d'un plus faible taux de participation à une collecte, mais celui-ci peut s'expliquer par le fait que les gens sont trop occupés en novembre, avec tout ce qu'il y a à faire entre Halloween et Noël.\r\n\r\nAILLEURS SUR INFO : Redécoupage électoral : la contestation de la « loi 59 » s’amplifie\r\nSi chaque donneur parle à quelqu’un qui n’a jamais donné de sang, ça crée de nouveaux donneurs et ça, c’est important, souligne Mme Larivée.\r\n\r\nCet événement, qui allie le Phoenix et le SPS, fait partie des plus grosses collectes annuelles de Sherbrooke. Les joueurs du Phoenix seront présents pour rencontrer les donneurs et c'est toujours une activité appréciée, puisque les occasions sont rares pour les deux parties de se rencontrer.\r\n\r\nOn ne sait jamais qui peut être en besoin de dons, donc c’est important pour nous d’être dans la société. Être capable de s’introduire avec Héma-Québec et qu’eux nous acceptent pour la collecte de sang, c’est fabuleux, appuie le joueur du Phoenix et président d’honneur de la collecte de sang, Hugo Marcil.\r\n\r\nChaque participant à cette collecte recevra un billet pour un match du Phoenix en échange de son don de sang.",
-        "Image": "314c18f0-a060-11ef-966f-f12ac67d776c.avif",
-        "Likes": [],
-        "Id": "314bf1e0-a060-11ef-966f-f12ac67d776c",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
-    },
-    {
-        "Date": 1731352266269,
-        "Category": "Transport",
-        "Title": "La station Saint-Michel rouverte au public ce lundi",
-        "Text": "Bonne nouvelle pour les usagers du métro : la station Saint-Michel est rouverte au public depuis 10 h, lundi. C'est ce qu'a annoncé la Société de transport de Montréal (STM) dans un communiqué.\r\n\r\nLa station était fermée depuis le 3 octobre afin de réaliser des travaux de sécurisation sur deux poutres de l'escalier principal au-dessus des voies, qui étaient dans un état de dégradation plus importante qu'anticipée.\r\n\r\nCette décision avait également entraîné la fermeture des stations Fabre et d’Iberville, sur la ligne bleue, en raison de l’emplacement des appareils de voies nécessaires au retournement des trains, avait alors expliqué la STM.",
-        "Image": "b3a2f301-a060-11ef-966f-f12ac67d776c.avif",
-        "Likes": [],
-        "Id": "b3a2f300-a060-11ef-966f-f12ac67d776c",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c"
-    },
-    {
-        "Date": 1733893596911,
-        "Category": "assdasda2",
-        "Title": "2adsadasd",
-        "Text": "2adsasdas",
-        "Image": "c9e54870-b753-11ef-8f2c-593cfecf7d84.png",
-        "User": "d547d6e0-b74b-11ef-beda-c37c412c898c",
-        "Likes": [],
-        "Id": "c9e52160-b753-11ef-8f2c-593cfecf7d84"
-    },
-    {
-        "Date": 1733993554583,
-        "Likes": [],
-        "Category": "Cegep",
-        "Title": "asda",
-        "Text": "asdas",
-        "Image": "854fe910-b83c-11ef-b80e-4331a3d39939.png",
         "User": {
             "Name": "Dereck",
             "Email": "dereck.desjardins@hotmail.com",
@@ -127,6 +131,175 @@
             "isBlocked": false,
             "isAdmin": false
         },
-        "Id": "854fc200-b83c-11ef-b80e-4331a3d39939"
+        "Id": "862171f0-9eb6-11ef-b0c1-abd3892cdb73"
+    },
+    {
+        "Date": 1731243369602,
+        "Category": "Santé",
+        "Title": "Les œufs de poule pour améliorer le traitement des cancers chez les enfants",
+        "Text": "Des chercheurs de l’Université de la Colombie-Britannique (UBC) veulent améliorer les traitements des enfants atteints de cancer. En faisant croître des tumeurs dans des œufs, ils étudient la façon dont certains médicaments déjà approuvés peuvent contribuer au traitement contre des cancers infantiles.\r\n\r\nL'œuf de poule n'a pas le système immunitaire nécessaire pour rejeter les tumeurs implantées, explique Chinten James Lim, professeur agrégé au département de pédiatrie de l'UBC et chercheur à l’Institut de recherche de l’Hôpital pour enfants de la Colombie-Britannique.\r\n\r\nL’œuf de poule est aussi hautement vascularisé, ce qui permet à la tumeur de croître rapidement. [L’œuf] fournit les différents éléments que la tumeur voit chez le patient, c'est-à-dire qu'elle baigne dans des nutriments qui lui permettent de se développer, précise Chinten James Lim.\r\n\r\nLes médicaments, le principal défi :\r\n\r\nChinten James Lim estime que l'un des plus grands défis du traitement contre les cancers infantiles est l'accessibilité des médicaments.\r\n\r\nLes cancers infantiles sont des cancers très rares au sein de la population. [...] On ne dispose donc pas de très nombreuses données pour réaliser des études cliniques de grande envergure, indique le chercheur.\r\n\r\nPar conséquent, le nombre de produits thérapeutiques approuvés pour les enfants n'est pas le même que pour les cancers des adultes.\r\n\r\nUne citation deChinten James Lim, professeur agrégé au département de pédiatrie de l'Université de la Colombie-Britannique\r\nL’Agence de la santé publique du Canada indique que le taux de survie au cancer après cinq ans est de près de 84 % chez les enfants. Chinten James Lim, de son côté, estime que ce taux peut s’améliorer avec des traitements plus précis.",
+        "Image": "0598d2c1-9eb7-11ef-b0c1-abd3892cdb73.avif",
+        "Likes": [],
+        "Id": "0598d2c0-9eb7-11ef-b0c1-abd3892cdb73",
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "Avatar": "http://localhost:5000/assetsRepository/a634d710-46c0-11ee-9c7d-4dfffb69e19c.png",
+            "Date": 1733870466141,
+            "Created": 1733852466,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619",
+            "isBlocked": false,
+            "isAdmin": false
+        }
+    },
+    {
+        "Date": 1732332957953,
+        "Category": "Santé",
+        "Title": "Comment les écarts de température affectent votre santé?",
+        "Text": "La WWW météo des dernières semaines a été surprenante avec des journées bien au-dessus des normales de saison, suivies d’une chute rapide des températures. Ce yoyo a des impacts sur la santé.\r\n\r\nLe professeur en épidémiologie à l’École interdisciplinaire des sciences de la santé de l'Université d’Ottawa, le Dr Éric Lavigne explique que les changements rapides peuvent favoriser la transmission de virus, entraîner des maladies respiratoires et augmenter les coûts pour le système de santé.",
+        "Image": "2b3d0dc0-9eb7-11ef-b0c1-abd3892cdb73.avif",
+        "Likes": [
+            {
+                "Name": "Dereck",
+                "Email": "dereck.desjardins@hotmail.com",
+                "EmailVerif": "dereck.desjardins@hotmail.com",
+                "Password": "************",
+                "PasswordVerif": "password",
+                "Avatar": "http://localhost:5000/assetsRepository/4dc545f0-b885-11ef-ae15-5f69b992fa8b.jpeg",
+                "keepDate": "on",
+                "Created": 1734006815,
+                "VerifyCode": "verified",
+                "Authorizations": {
+                    "readAccess": 1,
+                    "writeAccess": 1
+                },
+                "Verifycode": 674668,
+                "Id": "4dc51ee0-b885-11ef-ae15-5f69b992fa8b",
+                "isBlocked": false,
+                "isAdmin": false
+            }
+        ],
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "Avatar": "http://localhost:5000/assetsRepository/a634d710-46c0-11ee-9c7d-4dfffb69e19c.png",
+            "Date": 1733870466141,
+            "Created": 1733852466,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619",
+            "isBlocked": false,
+            "isAdmin": false
+        },
+        "Id": "2b3ce6b0-9eb7-11ef-b0c1-abd3892cdb73"
+    },
+    {
+        "Date": 1731352047602,
+        "Category": "Santé",
+        "Title": "Le Phoenix de Sherbrooke et le SPS allient leurs forces pour le don de sang",
+        "Text": "La collecte de sang du Phoenix et du Service de police de Sherbrooke (SPS) revient cette année. Sur un objectif de 400 donneurs, il en manque encore 150, alors que la collecte a lieu le lundi 11 novembre, à l'hôtel Delta de Sherbrooke.\r\n\r\nC'est une situation qui n'est pas idéale pour l'organisme. Héma-Québec a un objectif de 1000 dons par jour à recueillir à travers le Québec. C'est ainsi que l'organisme peut continuer de répondre à la demande.\r\n\r\nAu moment d’écrire ces lignes, 250 donneurs avaient pris rendez-vous pour la collecte, alors qu’il est également possible de simplement se présenter, si l’horaire le permet.\r\n\r\nSelon la porte-parole d'Héma-Québec, Josée Larivée, il est difficile de déterminer la cause d'un plus faible taux de participation à une collecte, mais celui-ci peut s'expliquer par le fait que les gens sont trop occupés en novembre, avec tout ce qu'il y a à faire entre Halloween et Noël.\r\n\r\nAILLEURS SUR INFO : Redécoupage électoral : la contestation de la « loi 59 » s’amplifie\r\nSi chaque donneur parle à quelqu’un qui n’a jamais donné de sang, ça crée de nouveaux donneurs et ça, c’est important, souligne Mme Larivée.\r\n\r\nCet événement, qui allie le Phoenix et le SPS, fait partie des plus grosses collectes annuelles de Sherbrooke. Les joueurs du Phoenix seront présents pour rencontrer les donneurs et c'est toujours une activité appréciée, puisque les occasions sont rares pour les deux parties de se rencontrer.\r\n\r\nOn ne sait jamais qui peut être en besoin de dons, donc c’est important pour nous d’être dans la société. Être capable de s’introduire avec Héma-Québec et qu’eux nous acceptent pour la collecte de sang, c’est fabuleux, appuie le joueur du Phoenix et président d’honneur de la collecte de sang, Hugo Marcil.\r\n\r\nChaque participant à cette collecte recevra un billet pour un match du Phoenix en échange de son don de sang.",
+        "Image": "314c18f0-a060-11ef-966f-f12ac67d776c.avif",
+        "Likes": [],
+        "Id": "314bf1e0-a060-11ef-966f-f12ac67d776c",
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "Avatar": "http://localhost:5000/assetsRepository/a634d710-46c0-11ee-9c7d-4dfffb69e19c.png",
+            "Date": 1733870466141,
+            "Created": 1733852466,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Id": "eee19330-b71d-11ef-9c7c-d5cb4d657619",
+            "isBlocked": false,
+            "isAdmin": false
+        }
+    },
+    {
+        "Date": 1731352266269,
+        "Category": "Transport",
+        "Title": "La station Saint-Michel rouverte au public ce lundi",
+        "Text": "Bonne nouvelle pour les usagers du métro : la station Saint-Michel est rouverte au public depuis 10 h, lundi. C'est ce qu'a annoncé la Société de transport de Montréal (STM) dans un communiqué.\r\n\r\nLa station était fermée depuis le 3 octobre afin de réaliser des travaux de sécurisation sur deux poutres de l'escalier principal au-dessus des voies, qui étaient dans un état de dégradation plus importante qu'anticipée.\r\n\r\nCette décision avait également entraîné la fermeture des stations Fabre et d’Iberville, sur la ligne bleue, en raison de l’emplacement des appareils de voies nécessaires au retournement des trains, avait alors expliqué la STM.",
+        "Image": "b3a2f301-a060-11ef-966f-f12ac67d776c.avif",
+        "Likes": [],
+        "Id": "b3a2f300-a060-11ef-966f-f12ac67d776c",
+        "User": {
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "Password": "password",
+            "Avatar": "4dc545f0-b885-11ef-ae15-5f69b992fa8b.jpeg",
+            "keepDate": "on",
+            "Created": 1734006815,
+            "VerifyCode": "verified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Verifycode": 674668,
+            "Id": "4dc51ee0-b885-11ef-ae15-5f69b992fa8b",
+            "isBlocked": false,
+            "isAdmin": false
+        }
+    },
+    {
+        "Date": 1734024953315,
+        "Likes": [
+            {
+                "Name": "Dereck",
+                "Email": "dereck.desjardins@hotmail.com",
+                "EmailVerif": "dereck.desjardins@hotmail.com",
+                "Password": "************",
+                "PasswordVerif": "password",
+                "Avatar": "http://localhost:5000/assetsRepository/4dc545f0-b885-11ef-ae15-5f69b992fa8b.jpeg",
+                "keepDate": "on",
+                "Created": 1734006815,
+                "VerifyCode": "verified",
+                "Authorizations": {
+                    "readAccess": 1,
+                    "writeAccess": 1
+                },
+                "Verifycode": 674668,
+                "Id": "4dc51ee0-b885-11ef-ae15-5f69b992fa8b",
+                "isBlocked": false,
+                "isAdmin": false
+            }
+        ],
+        "Category": "Cegep",
+        "Title": "Cegep Lionel Groulx - Coupe de budget",
+        "Text": "Sainte-Thérèse et Saint-Jérôme, le 20 novembre 2024 — Le Collège Lionel-Groulx et le Cégep de Saint-Jérôme unissent leur voix pour interpeler le gouvernement du Québec au sujet des impacts majeurs qu’auront les restrictions budgétaires et le gel d’embauche annoncés sur la mission d’accessibilité à l’enseignement supérieur des cégeps.\r\n\r\nDans une lettre d’opinion diffusée le 19 novembre dernier, les présidences des conseils d’administration de 40 cégeps expriment leur vive inquiétude pour l’avenir des services et du soutien aux étudiantes et étudiants. Partageant ces préoccupations, les directions générales des cégeps laurentiens appuient cette démarche.",
+        "Image": "a06bdf80-b885-11ef-97f6-5df4336a0ac2.jpeg",
+        "User": {
+            "Id": "4dc51ee0-b885-11ef-ae15-5f69b992fa8b",
+            "Name": "Dereck",
+            "Email": "dereck.desjardins@hotmail.com",
+            "EmailVerif": "dereck.desjardins@hotmail.com",
+            "Password": "************",
+            "PasswordVerif": "password",
+            "Avatar": "http://localhost:5000/assetsRepository/4dc545f0-b885-11ef-ae15-5f69b992fa8b.jpeg",
+            "keepDate": "on",
+            "Created": 1734006815,
+            "VerifyCode": "unverified",
+            "Authorizations": {
+                "readAccess": 1,
+                "writeAccess": 1
+            },
+            "Verifycode": 674668,
+            "isBlocked": false,
+            "isAdmin": false
+        },
+        "Id": "a06bb870-b885-11ef-97f6-5df4336a0ac2"
     }
 ]

@@ -279,7 +279,7 @@ function renderPost(post, loggedUser) {
     
     let headerIcons = ""
     if (user) {
-        if(user.Id = post.User.Id){
+        if(user.Id == post.User.Id){
             headerIcons =
             ` 
             <span class="editCmd cmdIconSmall fa fa-pencil" postId="${post.Id}" title="Modifier nouvelle"></span>
@@ -297,7 +297,6 @@ function renderPost(post, loggedUser) {
         }
 
     }
-    console.log(post.User);
     return $(`
         <div class="post" id="${post.Id}">
             <div class="postHeader">
