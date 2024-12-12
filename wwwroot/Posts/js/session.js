@@ -14,7 +14,7 @@ function createTimeoutPopup() {
 }
 let currentTimeouID = undefined;
 let initialized = false;
-let timeBeforeRedirect = 5;
+let timeBeforeRedirect = 50;
 let timeoutCallBack = () => {};
 let infinite = -1;
 let timeLeft = infinite;
@@ -25,6 +25,7 @@ function initTimeout(stallingTime = infinite, callback = timeoutCallBack) {
     timeoutCallBack = callback;
     createTimeoutPopup();
     initialized = true;
+    startCountdown();
 }
 function noTimeout() {
     $(".popup").hide();
@@ -41,8 +42,9 @@ function startCountdown() {
     if (timeLeft != infinite) {
         currentTimeouID = setInterval(() => {
             timeLeft = timeLeft - 1;
+            console.log('ticktock');
             if (timeLeft > 0) {
-                if (timeLeft <= 10) {
+                if (timeLeft <= 50) {
                     $(".popup").show();
                     $("#popUpMessage").text("Expiration dans " + timeLeft + " secondes");
                 }
@@ -54,7 +56,7 @@ function startCountdown() {
                     timeoutCallBack();
                 }
             }
-        }, 1000);
+        }, 50);
     }
 }
 function closePopup() {

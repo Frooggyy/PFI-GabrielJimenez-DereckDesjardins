@@ -31,10 +31,15 @@ export default class AccountsController extends Controller {
                 let user = this.repository.findByField("Email", loginInfo.Email);
                 if (user != null) {
                     if (user.Password == loginInfo.Password) {
-                        user = this.repository.get(user.Id);
-                        let newToken = TokenManager.create(user);
-                        this.HttpContext.response.created(newToken);
-
+                        if(user.Authorizations.readAccess !=-1){
+                            user = this.repository.get(user.Id);
+                            let newToken = TokenManager.create(user);
+                            this.HttpContext.response.created(newToken);
+                        }else{
+                            this.HttpContext.response.blocked("User has been blocked.");
+                        }
+                        
+                        
                     } else {
                         this.HttpContext.response.wrongPassword("Wrong password.");
                     }

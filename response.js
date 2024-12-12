@@ -102,7 +102,7 @@ export default class Response {
     unverifiedUser(errormessage = '') { return this.status(480, errormessage); }  // custom bad request status
     userNotFound(errormessage = '') { return this.status(481, errormessage); }    // custom bad request status
     wrongPassword(errormessage = '') { return this.status(482, errormessage); }   // custom bad request status
-
+    blocked(errormessage = '') { return this.status(483, errormessage); }
     /////////////////////////////////////////////// 500 ///////////////////////////////////////////////////////
 
     internalError(errormessage = '') { return this.status(500, errormessage); }   // internal error status

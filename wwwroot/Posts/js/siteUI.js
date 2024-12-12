@@ -93,7 +93,12 @@ function toogleShowKeywords() {
 /////////////////////////// Views management ////////////////////////////////////////////////////////////
 
 function intialView() {
-    $("#createPost").show();
+    if(sessionStorage.getItem("activeUser")){
+        $("#createPost").show();
+    }else{
+        $("#createPost").hide();
+    }
+    initTimeout();
     $("#hiddenIcon").hide();
     $("#hiddenIcon2").hide();
     $('#menu').show();
@@ -109,6 +114,10 @@ async function showPosts(reset = false) {
     intialView();
     $("#viewTitle").text("Fil de nouvelles");
     periodic_Refresh_paused = false;
+    if(sessionStorage.getItem("activeUser")){
+        initTimeout(300, ()=>{Users_API.Logout(JSON.parse(sessionStorage.getItem("activeUser"))); showPosts();});
+    }
+    
     await postsPanel.show(reset);
 }
 function showVerificationForm() {
@@ -118,6 +127,7 @@ function showVerificationForm() {
     renderVerificationForm(sessionStorage.getItem("activeUser"));
 }
 function hidePosts() {
+    noTimeout();
     postsPanel.hide();
     hideSearchIcon();
     $("#createPost").hide();
@@ -269,7 +279,7 @@ function renderPost(post, loggedUser) {
     
     let headerIcons = ""
     if (user) {
-        if(user.Id = post.UserId || user.Authorizations.writeAccess == 3){
+        if(user.Id = post.User.Id){
             headerIcons =
             ` 
             <span class="editCmd cmdIconSmall fa fa-pencil" postId="${post.Id}" title="Modifier nouvelle"></span>
@@ -829,8 +839,30 @@ function renderLoginForm() {
 
 
         if (loginInfo.Email && loginInfo.Password) {
-            Users_API.Login(loginInfo).then((thenToken) => {
-                token = thenToken;
+            Users_API.Login(loginInfo).then((reponse) => {
+                console.log(reponse);
+                for(res in reponse){
+                    console.log(res);
+                    switch(res){
+                        case "error_description":
+                            if(reponse.error_description == "This user email is not found."){
+                                console.log(res.error_description);
+                                $('#emailError').text(reponse.error_description);
+                                $('#passwordError').text("");
+                            }else if(reponse.error_description == "Wrong password."){
+                                $('#passwordError').text(reponse.error_description);
+                                $('#emailError').text("");
+                            }else if(reponse.error_description == "User has been blocked."){
+                                $('#emailError').text(reponse.error_description);
+                                $('#passwordError').text("");
+                            };
+                        break;
+                        case "Id":
+                            token = reponse;
+                            break;
+                    }
+                    break;
+                }
                 console.log(token);
                 if (token) {
                     user = token.User;
@@ -843,6 +875,8 @@ function renderLoginForm() {
                     }
 
                 }
+                
+                initTimeout(300, ()=>{Users_API.Logout(JSON.parse(sessionStorage.getItem("activeUser"))); showPosts();});
             });
         } else if (!loginInfo.Email) {
             $("#emailError").append("Courriel invalide");
@@ -882,6 +916,7 @@ function renderUserForm(user = null) {
     let valid=true;
     console.log(user);
     console.log(JSON.parse(sessionStorage.getItem("activeUser")));
+    
     $("#form").show();
     $("#form").empty();
     $("#form").append(`
@@ -913,7 +948,6 @@ function renderUserForm(user = null) {
             <input 
                 class="form-control Email MatchedInput"
                 name="EmailVerif" 
-                id="EmailVerif" 
                 matchedInputId="Email"
                 placeholder="Verification"
                 required
@@ -968,9 +1002,12 @@ function renderUserForm(user = null) {
     `);
     if (create) $("#keepDateControl").hide();
     if (create) $("#deleteUser").hide();
-
+    
     initImageUploaders();
+    addConflictValidation(Users_API.API_URL()+"accounts", "Email", "saveUser");
     initFormValidation(); // important do to after all html injection!
+    
+    
     
     $('#userForm').on("submit", async function (event) {
         event.preventDefault();
