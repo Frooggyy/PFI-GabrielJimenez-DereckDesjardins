@@ -30,6 +30,8 @@ export default class PostModelsController extends Controller {
                 if(foundPost.Likes==""){
                     foundPost.Likes=[];
                     foundPost.Likes.push(user);
+                }else{
+                    foundPost.Likes.push(user);
                 }
                 
             }
@@ -42,6 +44,12 @@ export default class PostModelsController extends Controller {
         }
     }
     deleteAll(userId){
-        console.log(userId);
+        let repoList = this.repository.getAll()
+        let postsToDelete = [];
+        repoList.forEach(post=>{
+            if(post.User.Id == userId){
+                this.repository.remove(post.Id)
+            }
+        })
     }
 }

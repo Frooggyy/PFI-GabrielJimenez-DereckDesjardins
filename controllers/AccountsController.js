@@ -225,7 +225,6 @@ export default class AccountsController extends Controller {
                 if (foundedUser != null) {
                     this.logout();
                     this.repository.remove(id);
-                    this.HttpContext.response.JSON(id)
                 } else
                     this.HttpContext.response.notFound();
             } else

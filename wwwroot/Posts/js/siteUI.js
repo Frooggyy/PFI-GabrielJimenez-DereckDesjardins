@@ -327,8 +327,8 @@ function renderPost(post, loggedUser) {
             showGestionPage();
         });
         $('.deleteUserCmd').on("click", function () {
-            Users_API.Delete($(this).attr("id")).then((userId)=>{
-                Posts_API.DeleteAll(userId);
+            Users_API.Delete($(this).attr("id")).then(()=>{
+                Posts_API.DeleteAll($(this).attr("id"));
             });
         });
         $('.banCmd').on("click", function () {
@@ -873,12 +873,13 @@ function renderUserForm(user = null) {
     let requirePassword = "";
     if (create) {
         user = newUser();
-        requirePassword= "required RequireMessage = 'Veuillez entrer un mot de passe'"
+        requirePassword= "required RequireMessage = 'les mots de passes ne correspondent pas'"
     }
     let idInput ="";
     if(!create){
         idInput = `<input name="Id" id="Id" type="hidden" value=${user.Id}`;
     }
+    let valid=true;
     console.log(user);
     console.log(JSON.parse(sessionStorage.getItem("activeUser")));
     $("#form").show();
@@ -896,27 +897,52 @@ function renderUserForm(user = null) {
                 required
                 value="${user.Name}"
             />
+            <div>
             <label for="Email" class="form-label">Email </label>
             <input 
-                class="form-control Email"
+                class="form-control Email MatchedInput"
                 name="Email" 
                 id="Email" 
+                matchedInputId="Email"
                 placeholder="Email"
                 required
                 RequireMessage="Veuillez entrer un courriel"
                 InvalidMessage="Le courriel n'a pas un format valide"
                 value="${user.Email}"
             />
+            <input 
+                class="form-control Email MatchedInput"
+                name="EmailVerif" 
+                id="EmailVerif" 
+                matchedInputId="Email"
+                placeholder="Verification"
+                required
+                RequireMessage="Veuillez entrer un courriel"
+                InvalidMessage="Les courriels ne correspondent pas"
+            />
+            </div>
+            <span id="emailError"></span>
+            <div>
             <label for="Password" class="form-label">Mot de Passe</label>
              <input 
                 type="password"
-                class="form-control" 
+                class="form-control  MatchedInput" 
                 name="Password" 
                 id="Password"
+                matchedInputId="Password"
                 placeholder="Mot de passe" 
                 ${requirePassword}
                 </input>
-            
+             <input 
+                type="password"
+                class="form-control  MatchedInput" 
+                name="PasswordVerif" 
+                id="PasswordVerif"
+                matchedInputId="Password"
+                placeholder="Verification"
+                </input>
+            </div>
+            <span id="passwordError"></span>
             <label class="form-label">Avatar</label>
             <div class='imageUploaderContainer' style="max-height:400px; max-width:400px; margin:auto;">
                 <div class='imageUploader'  
@@ -945,23 +971,26 @@ function renderUserForm(user = null) {
 
     initImageUploaders();
     initFormValidation(); // important do to after all html injection!
-
-    $("#commit").click(function () {
-        $("#commit").off();
-        return $('#saveUser').trigger("click");
-    });
+    
     $('#userForm').on("submit", async function (event) {
-        
+        event.preventDefault();
         console.log(create);
         let user = getFormData($("#userForm"));
-        await Users_API.Save( user, create).then(async (thenUser)=>{
-            if(!create){
-                sessionStorage.setItem("activeUser", JSON.stringify(thenUser));
-                console.log(thenUser);
-            }
-                
-        });
-        showPosts()
+       
+
+        
+        if(valid){
+            await Users_API.Save( user, create).then(async (thenUser)=>{
+                if(!create){
+                    sessionStorage.setItem("activeUser", JSON.stringify(thenUser));
+                    console.log(thenUser);
+                }
+                    
+            });
+            showPosts();
+        }
+        
+        
         if(Users_API.currentHttpError)
             showError("Une erreur est survenue! ", Users_API.currentHttpError);
     });

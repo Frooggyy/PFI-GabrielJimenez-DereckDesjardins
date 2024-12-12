@@ -153,16 +153,9 @@ class Users_API {
             $.ajax({
                 url: create ? this.API_URL()+`accounts/register`: this.API_URL() + `accounts/modify`,
                 type: create ? "POST" : "PUT",
-                headers:
-                create? {
-                    "Content-Type": "application/json"
-                }
-                :
-                {
-                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
-                    "Content-Type": "application/json"
-                },
-                data:JSON.stringify(data),
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                
                 success: (data) => { resolve(data); },
                 error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
             });
