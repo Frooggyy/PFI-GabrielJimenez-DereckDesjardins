@@ -187,6 +187,11 @@ function showAbout() {
     $("#viewTitle").text("À propos...");
     $("#aboutContainer").show();
 }
+function showGestionPage(){
+    hidePosts();
+    $("#viewTitle").text("Gestion des usagers");
+    renderAllUsers();
+}
 
 
 //////////////////////////// Posts rendering /////////////////////////////////////////////////////////////
@@ -282,8 +287,6 @@ function renderPost(post, loggedUser) {
         }
 
     }
-
-
     return $(`
         <div class="post" id="${post.Id}">
             <div class="postHeader">
@@ -303,6 +306,70 @@ function renderPost(post, loggedUser) {
         </div>
     `);
 }
+function renderAllUsers(){
+    $("#form").show();
+    $("#form").empty();
+    $('#menu').show();
+    $('#abort').show();
+    let users = Users_API.Index().then((data)=>{ 
+        data.forEach(user=>{
+            renderUser(user);
+        });
+    });
+
+
+}
+
+function renderUser(user){
+    let specificId = user.Id;
+    $("#form").append(`
+        <span class="user" id="${user.Id}">
+        </span>
+    `);
+    $("#"+specificId).append(`
+            <div>
+                <img src="${user.Avatar}" alt="${user.Avatar}" class="UserAvatarXSmall">
+            </div>
+            <div>${user.Name}</div>
+    `);
+    if(user.Authorizations.readAccess == -1){
+        $("#"+specificId).append(`
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox red" title="Débloquer ${user.Name}?" id="banCmd"></div>
+            <div class="fa-solid fa-x cmdIconSmall iconBox" title="Débloquez cet usager pour changer son status"></div>
+        `);
+    }
+    else if(user.Authorizations.readAccess == 1){
+        $("#"+specificId).append(`
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green" title="Bloquer ${user.Name}?" id="banCmd"></div>
+            <div class="fa-solid fa-user cmdIconSmall iconBox" title="Changer pour super-usager?" id="promoteCmd"></div>
+        `);
+    }
+    else if(user.Authorizations.readAccess == 2){
+        $("#"+specificId).append(`
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green" title="Bloquer ${user.Name}?" id="banCmd"></div>
+            <div class="fa-solid fa-star cmdIconSmall iconBox" title="Changer pour administrateur?" id="promoteCmd"></div>
+        `);
+    }
+    else if(user.Authorizations.readAccess == 3){
+        $("#"+specificId).append(`
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green" title="Bloquer ${user.Name}?" id="banCmd"></div>
+            <div class="fa-solid fa-crown cmdIconSmall iconBox" title="Changer pour usager normal?" id="promoteCmd"></div>            
+        `);
+    }
+    $("#"+specificId).append(`
+        <div class="fa-solid fa-trash cmdIconSmall iconBox" title="Supprimer ${user.Name}?" id="deleteUserCmd"></div>
+    `);
+    $('#promoteCmd').on("click", function () {
+        Users_API.Promote($(".user").attr("id"));
+    });
+    $('#deleteUserCmd').on("click", function () {
+        //delete
+    });
+    $('#banCmd').on("click", function () {
+        Users_API.Block($(".user").attr("id"));
+    });
+}
+
 async function compileCategories() {
     categories = [];
     let response = await Posts_API.GetQuery("?fields=category&sort=category");
@@ -323,6 +390,16 @@ function updateDropDownMenu() {
     let DDMenu = $("#DDMenu");
     let selectClass = selectedCategory === "" ? "fa-check" : "fa-fw";
     DDMenu.empty();
+    if(sessionStorage.getItem('activeUser')){
+        if(JSON.parse(sessionStorage.getItem('activeUser')).Authorizations.readAccess == 3){
+            DDMenu.append($(`
+                <div class="dropdown-item menuItemLayout" id="gestionCmd">
+                    <i class="menuIcon fa fa-users mx-2"></i> Gestion des Usagers
+                </div>
+            `));
+            DDMenu.append($(`<div class="dropdown-divider"></div>`));
+        }
+    }
     DDMenu.append($(`
         <div class="dropdown-item menuItemLayout" id="allCatCmd">
             <i class="menuIcon fa ${selectClass} mx-2"></i> Toutes les catégories
@@ -378,6 +455,9 @@ function updateDropDownMenu() {
         selectedCategory = "";
         await showPosts(true);
         updateDropDownMenu();
+    });
+    $('#gestionCmd').on("click", function () {
+        showGestionPage();
     });
     $('.category').on("click", async function () {
         selectedCategory = $(this).text().trim();

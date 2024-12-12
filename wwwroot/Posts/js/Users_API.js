@@ -42,11 +42,65 @@ class Users_API {
             });
         });
     }
+    static async Index(data) {
+        Users_API.initHttpState();
+        return new Promise(resolve => {
+            $.ajax({
+                url: this.API_URL()+`accounts/index`,
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
+                    "Content-Type": "application/json"
+                },
+                success: (data) => { resolve(data); },
+                error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
+            });
+        });
+    }
+
+
+    static async Promote(data) {
+        Users_API.initHttpState();
+        return new Promise(resolve => {
+            $.ajax({
+                url: this.API_URL()+`accounts/promote`,
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify(data),
+                success: (data) => { resolve(data); },
+                error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
+            });
+        });
+    }
+
+
+    static async Block(data) {
+        Users_API.initHttpState();
+        return new Promise(resolve => {
+            $.ajax({
+                url: this.API_URL()+`accounts/block`,
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer "+JSON.parse(sessionStorage.getItem("activeToken")).Access_token,
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify(data),
+                success: (data) => { resolve(data); },
+                error: (xhr) => { Users_API.setHttpErrorState(xhr); resolve(null); }
+            });
+        });
+    }
+
+
     static async GetQuery(queryString = "") {
         Users_API.initHttpState();
         return new Promise(resolve => {
             $.ajax({
                 url: this.API_URL() + queryString,
+                
                 complete: data => {
                     resolve({ ETag: data.getResponseHeader('ETag'), data: data.responseJSON });
                 },

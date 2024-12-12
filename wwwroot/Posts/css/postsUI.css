@@ -168,3 +168,29 @@
     overflow-y: auto;
     scrollbar-gutter: stable;
 }
+
+.user{
+    border-radius: 5px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: lightgray;
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr 1fr 1fr ;
+    margin: 5px;
+    padding:5px;
+}
+.iconBox{
+    margin:auto;
+}
+.cmdIconSmallColorless {
+    font-size: 1.1rem;
+    -webkit-text-stroke-color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.red{
+    color: red !important;
+}
+.green{
+    color: green !important;
+}
