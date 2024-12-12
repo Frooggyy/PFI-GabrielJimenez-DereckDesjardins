@@ -298,6 +298,7 @@ function renderPost(post, loggedUser) {
             </div>
             <div class="postTitle"> ${post.Title} </div>
             <img class="postImage" src='${post.Image}'/>
+            <div>${post.User}</div>
             <div class="postDate"> ${date} </div>
             <div postId="${post.Id}" class="postTextContainer hideExtra">
                 <div class="postText" >${post.Text}</div>
@@ -705,7 +706,7 @@ function renderPostForm(post = null) {
         event.preventDefault();
         let post = getFormData($("#postForm"));
         user = JSON.parse(sessionStorage.getItem('activeUser'));
-        post.UserId = user.Id;
+        post.User = user;
         if (post.Category != selectedCategory)
             selectedCategory = "";
         if (create || !('keepDate' in post))
