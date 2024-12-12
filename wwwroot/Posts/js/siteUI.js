@@ -640,6 +640,7 @@ function newPost() {
     Post.Image = "news-logo-upload.png";
     Post.Category = "";
     Post.UserId = "";
+    Post.Likes = []
     return Post;
 }
 function renderPostForm(post = null) {
@@ -652,6 +653,7 @@ function renderPostForm(post = null) {
         <form class="form" id="postForm">
             <input type="hidden" name="Id" value="${post.Id}"/>
              <input type="hidden" name="Date" value="${post.Date}"/>
+             <input type="hidden" name="Likes" value="${post.Likes}"/>
             <label for="Category" class="form-label">Catégorie</label>
             <input 
                 class="form-control"
@@ -948,7 +950,6 @@ function renderUserForm(user = null) {
         showPosts()
         if(Users_API.currentHttpError)
             showError("Une erreur est survenue! ", Users_API.currentHttpError);
-        event.stopImmediatePropagation();
     });
     $('#cancel').on("click", async function () {
         await showPosts();
