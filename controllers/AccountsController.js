@@ -79,12 +79,13 @@ export default class AccountsController extends Controller {
     //GET : /accounts/verify?id=...&code=.....
     verify() {
         if (this.repository != null) {
-            let id = this.HttpContext.path.params.id;
+            let id = this.HttpContext.path.params.Id;
             let code = parseInt(this.HttpContext.path.params.code);
             let userFound = this.repository.findByField('Id', id);
             if (userFound) {
                 if (userFound.VerifyCode == code) {
                     userFound.VerifyCode = "verified";
+                    this.repository.update(userFound.Id, userFound);
                     if (this.repository.model.state.isValid) {
                         userFound = this.repository.get(userFound.Id); // get data binded record
                         this.HttpContext.response.JSON(userFound);
@@ -138,14 +139,15 @@ export default class AccountsController extends Controller {
             this.HttpContext.response.notImplemented();
     }
     promote(user) {
+        
         if (AccessControl.writeGranted(this.HttpContext.authorizations, AccessControl.admin())) {
             if (this.repository != null) {
-                let foundUser = this.repository.findByField("Id", user.Id);
+                let foundUser = this.repository.findByField("Id", user);
                 foundUser.Authorizations.readAccess++;
                 if (foundUser.Authorizations.readAccess > 3) foundUser.Authorizations.readAccess = 1;
                 foundUser.Authorizations.writeAccess++;
                 if (foundUser.Authorizations.writeAccess > 3) foundUser.Authorizations.writeAccess = 1;
-                this.repository.update(user.Id, foundUser, false);
+                this.repository.update(user, foundUser, false);
                 if (this.repository.model.state.isValid) {
                     let userFound = this.repository.get(foundUser.Id); // get data binded record
                     this.HttpContext.response.JSON(userFound);
@@ -160,10 +162,10 @@ export default class AccountsController extends Controller {
     block(user) {
         if (AccessControl.writeGranted(this.HttpContext.authorizations, AccessControl.admin())) {
             if (this.repository != null) {
-                let foundUser = this.repository.findByField("Id", user.Id);
+                let foundUser = this.repository.findByField("Id", user);
                 foundUser.Authorizations.readAccess = foundUser.Authorizations.readAccess == 1 ? -1 : 1;
                 foundUser.Authorizations.writeAccess = foundUser.Authorizations.writeAccess == 1 ? -1 : 1;
-                this.repository.update(user.Id, foundUser, false);
+                this.repository.update(user, foundUser, false);
                 if (this.repository.model.state.isValid) {
                     let userFound = this.repository.get(foundUser.Id); // get data binded record
                     this.HttpContext.response.JSON(userFound);
@@ -217,13 +219,13 @@ export default class AccountsController extends Controller {
     // GET:account/remove/id
     remove(id) { // warning! this is not an API endpoint 
         // todo make sure that the requester has legitimity to delete ethier itself or its an admin
-        console.log(this.HttpContext.req.headers);
         if (AccessControl.writeGrantedAdminOrOwner(this.HttpContext, this.requiredAuthorizations, id)) {
             if (this.repository != null) {
                 let foundedUser = this.repository.findByField("Id", id);
                 if (foundedUser != null) {
-                    this.logout()
-                    this.repository.remove(id)
+                    this.logout();
+                    this.repository.remove(id);
+                    this.HttpContext.response.JSON(id)
                 } else
                     this.HttpContext.response.notFound();
             } else

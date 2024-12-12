@@ -37,7 +37,7 @@ async function Init_UI() {
 
     this.user = sessionStorage.getItem("activeUser");
     installKeywordsOnkeyupEvent();
-    await showPosts();
+    showPosts();
     start_Periodic_Refresh();
 }
 
@@ -107,9 +107,6 @@ function intialView() {
 }
 async function showPosts(reset = false) {
     intialView();
-    if(sessionStorage.getItem("activeUser")){
-        console.log(JSON.parse(sessionStorage.getItem("activeUser")));
-    }
     $("#viewTitle").text("Fil de nouvelles");
     periodic_Refresh_paused = false;
     await postsPanel.show(reset);
@@ -207,7 +204,7 @@ function start_Periodic_Refresh() {
             let etag = await Posts_API.HEAD();
             if (currentETag != etag) {
                 currentETag = etag;
-                await showPosts();
+                showPosts();
             }
         }
     },
@@ -309,7 +306,7 @@ function renderPost(post, loggedUser) {
         </div>
     `);
 }
-function renderAllUsers(){
+ function renderAllUsers(){
     $("#form").show();
     $("#form").empty();
     $('#menu').show();
@@ -317,8 +314,24 @@ function renderAllUsers(){
     let users = Users_API.Index().then((data)=>{ 
         data.forEach(user=>{
             renderUser(user);
+            
         });
+        $('.promoteCmd').on("click",async  function () {
+            Users_API.Promote($(this).attr("id"));
+            showGestionPage();
+        });
+        $('.deleteUserCmd').on("click", function () {
+            Users_API.Delete($(this).attr("id")).then((userId)=>{
+                Posts_API.DeleteAll(userId);
+            });
+        });
+        $('.banCmd').on("click", function () {
+            Users_API.Block($(this).attr("id"));
+            showGestionPage();
+        });
+        
     });
+    
 
 
 }
@@ -337,40 +350,32 @@ function renderUser(user){
     `);
     if(user.Authorizations.readAccess == -1){
         $("#"+specificId).append(`
-            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox red" title="Débloquer ${user.Name}?" id="banCmd"></div>
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox red banCmd" title="Débloquer ${user.Name}?" id="${user.Id}"></div>
             <div class="fa-solid fa-x cmdIconSmall iconBox" title="Débloquez cet usager pour changer son status"></div>
         `);
     }
     else if(user.Authorizations.readAccess == 1){
         $("#"+specificId).append(`
-            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green" title="Bloquer ${user.Name}?" id="banCmd"></div>
-            <div class="fa-solid fa-user cmdIconSmall iconBox" title="Changer pour super-usager?" id="promoteCmd"></div>
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green banCmd" title="Bloquer ${user.Name}?" id="${user.Id}"></div>
+            <div class="fa-solid fa-user cmdIconSmall iconBox promoteCmd" title="Changer pour super-usager?" id="${user.Id}"></div>
         `);
     }
     else if(user.Authorizations.readAccess == 2){
         $("#"+specificId).append(`
-            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green" title="Bloquer ${user.Name}?" id="banCmd"></div>
-            <div class="fa-solid fa-star cmdIconSmall iconBox" title="Changer pour administrateur?" id="promoteCmd"></div>
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green banCmd" title="Bloquer ${user.Name}?" id="${user.Id}"></div>
+            <div class="fa-solid fa-star cmdIconSmall iconBox promoteCmd" title="Changer pour administrateur?" id="${user.Id}"></div>
         `);
     }
     else if(user.Authorizations.readAccess == 3){
         $("#"+specificId).append(`
-            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green" title="Bloquer ${user.Name}?" id="banCmd"></div>
-            <div class="fa-solid fa-crown cmdIconSmall iconBox" title="Changer pour usager normal?" id="promoteCmd"></div>            
+            <div class="fa-solid fa-ban cmdIconSmallColorless iconBox green banCmd" title="Bloquer ${user.Name}?" id="${user.Id}"></div>
+            <div class="fa-solid fa-crown cmdIconSmall iconBox promoteCmd" title="Changer pour usager normal?" id="${user.Id}"></div>            
         `);
     }
     $("#"+specificId).append(`
-        <div class="fa-solid fa-trash cmdIconSmall iconBox" title="Supprimer ${user.Name}?" id="deleteUserCmd"></div>
+        <div class="fa-solid fa-trash cmdIconSmall iconBox deleteUserCmd" title="Supprimer ${user.Name}?" id="${user.Id}"></div>
     `);
-    $('#promoteCmd').on("click", function () {
-        Users_API.Promote($(".user").attr("id"));
-    });
-    $('#deleteUserCmd').on("click", function () {
-        //delete
-    });
-    $('#banCmd').on("click", function () {
-        Users_API.Block($(".user").attr("id"));
-    });
+    
 }
 
 async function compileCategories() {
@@ -930,7 +935,7 @@ function renderUserForm(user = null) {
         return $('#saveUser').trigger("click");
     });
     $('#userForm').on("submit", async function (event) {
-        event.preventDefault();
+        
         console.log(create);
         let user = getFormData($("#userForm"));
         await Users_API.Save( user, create).then(async (thenUser)=>{
@@ -940,10 +945,10 @@ function renderUserForm(user = null) {
             }
                 
         });
-
-        await showPosts();
+        showPosts()
         if(Users_API.currentHttpError)
             showError("Une erreur est survenue! ", Users_API.currentHttpError);
+        event.stopImmediatePropagation();
     });
     $('#cancel').on("click", async function () {
         await showPosts();
